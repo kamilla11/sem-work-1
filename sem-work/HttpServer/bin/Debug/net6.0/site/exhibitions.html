@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<!--
+	Helios by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>Эрмитаж</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <!-- Styles -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/assets/css/animate.css" rel="stylesheet" type="text/css"/>
+    <link href="/assets/css/main.css" rel="stylesheet" type="text/css"/>
+    <link rel="icon" href="/assets/images/icon.png"/>
+    <noscript>
+        <link rel="stylesheet" href="/assets/css/noscript.css"/>
+    </noscript>
+</head>
+<body class="no-sidebar">
+<div id="page-wrapper">
+
+    <!-- Header -->
+    <div id="header">
+
+        <!-- Inner -->
+        <div class="inner">
+            <header>
+                <h1 id="logo">Выставки</h1>
+            </header>
+        </div>
+
+
+        <!-- Nav -->
+        <nav id="nav">
+            <ul>
+                <li><a href="/main">Главная</a></li>
+                <li>
+                    <a href="#">События</a>
+                    <ul>
+                        <li><a href="/exhibitions">Выставки</a></li>
+                        <li><a href="/events">Мероприятия</a></li>
+                    </ul>
+                </li>
+                <li><a href="/expositions">Экспозиции</a></li>
+                <li><a href="/accounts">Профиль</a></li>
+            </ul>
+        </nav>
+
+    </div>
+
+    <!-- Studio -->
+    <div class="container studio">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-sm-12 wow fadeInDown">
+                <hr/>
+                <p class="text-center pt-3 pb-3">Ознакомтесь ближе с уникальными выставками музея Эрмитаж.</p>
+                <hr/>
+            </div>
+
+        </div>
+    </div>
+    <div class="container exhibition">
+        {{for exhibition in exhibitions}}
+        <div class="exhibition_one text-left">
+                <img class="img-fluid" src="{{exhibition.img_path}}" alt="Photo">
+                <p>{{exhibition.start_date}} - {{exhibition.end_date}}</p>
+                <p>{{exhibition.place}}</p>
+                <h3>{{exhibition.name}}</h3>
+                <p>{{exhibition.description}}</p>
+        </div>
+        {{end}}
+<!--        <div class="exhibition_one">-->
+<!--                <img class="img-fluid" src="/assets/images/photo-2.jpg" alt="Photo">-->
+<!--                <p>Exhibition</p>-->
+<!--                <p>Artist</p>-->
+<!--        </div>-->
+<!--        <div class="exhibition_one">-->
+<!--                <img class="img-fluid" src="/assets/images/photo-2.jpg" alt="Photo">-->
+<!--                <p>Exhibition</p>-->
+<!--                <p>Artist</p>-->
+<!--        </div>-->
+<!--        <div class="exhibition_one">-->
+<!--                <img class="img-fluid" src="/assets/images/photo-2.jpg" alt="Photo">-->
+<!--                <p>Exhibition</p>-->
+<!--                <p>Artist</p>-->
+<!--        </div>-->
+    </div>
+    <!-- End Studio -->
+
+    <!-- Footer -->
+    <div id="footer">
+        <div class="container">
+            <div class="col-12">
+
+                <!-- Contact -->
+                <section class="footer-contact">
+                    <header>
+                        <h3>Надеюсь, вам понравилась моя работа</h3>
+                    </header>
+                    <p class="text-center">Семестровая работа Гафаровой Камиллы, группа 11-106</p>
+                    <ul class="icons">
+                        <li><a href="https://vk.com/id120630797" class="icon brands fa-vk"><span class="label">Vk</span></a>
+                        </li>
+                        <li><a href="https://t.me/kama_llama" class="icon brands fa-telegram"><span class="label">Telegram</span></a>
+                        </li>
+                        <li><a href="https://github.com/kamilla11/sem-work-1" class="icon brands fa-github"><span class="label">GitHub</span></a>
+                        </li>
+                    </ul>
+                </section>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/jquery.dropotron.min.js"></script>
+<script src="/assets/js/jquery.scrolly.min.js"></script>
+<script src="/assets/js/jquery.scrollex.min.js"></script>
+<script src="/assets/js/browser.min.js"></script>
+<script src="/assets/js/breakpoints.min.js"></script>
+<script src="/assets/js/util.js"></script>
+<script src="/assets/js/wow.js"></script>
+<script src="/assets/js/main.js"></script>
+<script>
+    new WOW().init();
+</script>
+
+</body>
+</html>

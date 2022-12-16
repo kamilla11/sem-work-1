@@ -1,0 +1,144 @@
+@import '../bootstrapStyle';
+
+.panel {
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+  //display: block;
+}
+
+.profile-nav, .profile-info {
+  margin-top: 30px;
+}
+
+.profile-nav .user-heading {
+  //background: #fbc02d;
+  color: #fff;
+  border-radius: 4px 4px 0 0;
+  -webkit-border-radius: 4px 4px 0 0;
+  padding: 30px;
+  text-align: center;
+}
+
+.profile-nav .user-heading.round a {
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border: 10px solid rgba(255, 255, 255, 0.3);
+  display: inline-block;
+}
+
+.profile-nav .user-heading a img {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  vertical-align: middle;
+}
+
+.profile-nav .user-heading h1 {
+  font-size: 22px;
+  font-weight: 300;
+  margin-bottom: 5px;
+}
+
+.profile-nav .user-heading p {
+  font-size: 12px;
+}
+
+.profile-nav ul {
+  margin-top: 1px;
+  display: block;
+}
+
+.profile-nav ul > li {
+  border-bottom: 1px solid #ebeae6;
+  margin-top: 0;
+  line-height: 30px;
+  padding-left:0 ;
+}
+
+.profile-nav ul > li:last-child {
+  border-bottom: none;
+}
+
+.profile-nav ul > li > a {
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  color: #89817f;
+  border-left: 5px solid #fff;
+  padding: 10px 15px;
+  position: relative;
+  display: block;
+}
+
+.profile-nav ul > li > a:hover, .profile-nav ul > li > a:focus, .profile-nav ul li.active a {
+  background: #f8f7f5 !important;
+  border-left: 5px solid $brand-gold;
+  color: #89817f !important;
+}
+
+.profile-nav ul > li:last-child > a:last-child {
+  border-radius: 0 0 4px 4px;
+  -webkit-border-radius: 0 0 4px 4px;
+}
+
+.profile-nav ul > li > a > i {
+  font-size: 16px;
+  padding-right: 10px;
+  color: #bcb3aa;
+}
+
+.user-profile-form input[type=text], .user-profile-form input[type=email], .user-profile-form input[type=password], .user-profile-form select, .user-profile-form textarea{
+  -webkit-appearance: none;
+  display: block;
+  border: none;
+  border-radius: 4px;;
+  background: #fafafa;
+  width: 100%;
+  padding: 1em;
+  -moz-transition: background-color 0.35s ease-in-out, border-color 0.35s ease-in-out;
+  -webkit-transition: background-color 0.35s ease-in-out, border-color 0.35s ease-in-out;
+  -ms-transition: background-color 0.35s ease-in-out, border-color 0.35s ease-in-out;
+  transition: background-color 0.35s ease-in-out, border-color 0.35s ease-in-out;
+}
+
+.user-profile-form .hidden-id{
+  display: none;
+}
+
+.user-profile-form{
+  margin-bottom:4em;
+  
+    :nth-child(2){
+      margin-top: 0;
+      label{
+        margin-top: 0;
+      }
+  }
+  hr{
+    margin: 10px 0;
+  }
+  h3{
+    margin:0;
+  }
+
+  p{
+    font-size: 1em;
+   
+  }
+  
+}
+
+button{
+  color: #fff;
+  background: $brand-gold;
+  
+  &:hover {
+   
+   color: $brand-gold;
+    background: #fff;
+  }
+}

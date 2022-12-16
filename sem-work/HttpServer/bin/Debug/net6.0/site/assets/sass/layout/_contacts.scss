@@ -1,0 +1,107 @@
+hr{
+  top:0;
+  margin-bottom: 0;
+}
+
+/* Contact */
+
+.contact {
+  font-size: 1em;
+  padding-top: 5rem;
+  padding-bottom: 6rem;
+  
+  
+  //.row{
+  //  border: 1px #1b1e21;
+  //}
+}
+
+.tickets{
+  display: flex;
+  flex-wrap: wrap;
+ // flex-flow: column wrap;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: 4rem;
+}
+.ticket {
+  border: 1px solid #1b1e21;
+  border-radius: 12px;
+  display: flex;
+  padding: 1.3rem;
+  margin-bottom: 2rem;
+  width: 45%;
+  //margin-right: 2rem;
+}
+.ticket_title{
+  width:80%;
+}
+.ticket_sum{
+  width:20%;
+}
+/* Contact Form */
+
+.contact-form {
+  font-size: 1em;
+  padding-bottom: 8rem;
+}
+
+.contact-form .btn-primary {
+  color: #fff;
+  background-color: #000;
+  border-color: #000;
+}
+
+.contact-form .form-control {
+  color: #000;
+  background-color: transparent;
+  border-color: #000;
+  border-width: 0 0 2px 0;
+  border-radius: 0;
+  border-style: solid;
+  font-size: 1.5rem;
+}
+
+.form-control::-webkit-input-placeholder {
+  color: #000;
+  opacity: 0.6;
+}
+
+.form-control {
+  padding: 1.5rem 16rem 1.5rem 0.75rem
+}
+
+.contact-form .btn {
+  padding: 0.8rem 4rem;
+  border-radius: 5px;
+}
+
+.info p {
+  padding-top:40px ;
+}
+
+.contacts-info{
+  display: flex;
+ justify-content: space-between;
+  div{
+    flex:33%;
+    //padding-right: 5rem;
+    //:nth-child(2){
+    //  flex:33%;
+    //}
+    &:last-child{
+      padding-left: 13%;
+    }
+  }
+
+}
+
+.contacts-info-add{
+  padding-right: 0;
+  h3{
+    margin-bottom: 5px;
+  }
+  p{
+    margin-bottom: 30px;
+  }
+}

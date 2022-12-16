@@ -1,0 +1,205 @@
+<!DOCTYPE HTML>
+<!--
+	Helios by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>Эрмитаж</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <!-- Styles -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/animate.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/swiper.min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/main.css" rel="stylesheet" type="text/css"/>
+    <link rel="icon" href="assets/images/icon.png"/>
+    <noscript>
+        <link rel="stylesheet" href="assets/css/noscript.css"/>
+    </noscript>
+</head>
+<body>
+<div id="page-wrapper">
+
+    <!-- Header -->
+    <div id="header">
+
+        <!-- Inner -->
+        <!--        <div class="inner">-->
+        <!--            <header>-->
+        <!--                <h1><a href="index.html" id="logo">Helios</a></h1>-->
+        <!--            </header>-->
+        <!--        </div>-->
+
+<!--        <div class="inner">-->
+        <div class="login-register">
+            
+            <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
+            <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
+            <div class="login-sign-up-forms">
+                <form class="login-form" method="post" action="accounts/login">
+                    <h3>Login Here</h3>
+
+                    <label for="username">Username</label>
+                    <input type="text" placeholder="Email or Phone" id="username" name = "login" required>
+
+                    <label for="password">Password</label>
+                    <input type="password" placeholder="Password" id="password" name = "password" required>
+
+                    <input type="checkbox" class="check" id="check" name="remember" checked>
+                    <label for="check"><span class="icon"></span> Keep me Signed in</label>
+
+                    <button>Log In</button>
+                    <!--                    <div class="social">-->
+                    <!--                        <div class="go"><i class="fab fa-google"></i> Google</div>-->
+                    <!--                        <div class="fb"><i class="fab fa-facebook"></i> Facebook</div>-->
+                    <!--                    </div>-->
+                </form>
+
+                <form class="sign-up-form" method="post" action="accounts/saveAccount">
+                    <h3>Register Here</h3>
+
+                    <label for="email">Email</label>
+                    <input type="text" placeholder="Email or Phone" id="email"  name = "email" required>
+
+                    <label for="password">Password</label>
+                    <input type="password" placeholder="Password" id="password" name = "password" required>
+
+                    <label for="name">Name</label>
+                    <input type="text" placeholder="Name" id="name" name = "name" required>
+
+                    <label for="surname">Surname</label>
+                    <input type="text" placeholder="Surname" id="surname" name = "surname" required>
+
+                    <label for="gender">Gender</label>
+                    <select  id="gender" name = "gender" required>
+                        <option disabled>Укажите гендер</option>
+                        <option value="female">Женщина</option>
+                        <option value="male">Мужчина</option>
+                        <option value="notABinary">Небинарная личность</option>
+                    </select>
+
+                    <button>Sign up</button>
+                </form>
+            </div>
+            
+        </div>
+               
+<!--        </div>-->
+
+        <!-- Nav -->
+        <nav id="nav">
+            <ul>
+                <li><a href="/main">Главная</a></li>
+                <li>
+                    <a href="#">События</a>
+                    <ul>
+                        <li><a href="/exhibitions">Выставки</a></li>
+                        <li><a href="/events">Мероприятия</a></li>
+                    </ul>
+                </li>
+                <li><a href="/expositions">Экспозиции</a></li>
+                <li><a href="/accounts">Профиль</a></li>
+            </ul>
+        </nav>
+
+    </div>
+
+
+    <!--        <div class="img js-fullheight" style="background-image: url(assets/images/bg.jpg);">&ndash;&gt;-->
+    <!--            <section class="ftco-section">-->
+    <!--                <div class="container">-->
+    <!--                    <div class="row justify-content-center">-->
+    <!--                        <div class="col-md-6 text-center mb-5">-->
+    <!--                            <h2 class="heading-section">Login #10</h2>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+    <!--                    <div class="row justify-content-center">-->
+    <!--                        <div class="col-md-6 col-lg-4">-->
+    <!--                            <div class="login-wrap p-0">-->
+    <!--                                <h3 class="mb-4 text-center">Have an account?</h3>-->
+    <!--                                <form action="#" class="signin-form">-->
+    <!--                                    <div class="form-group">-->
+    <!--                                        <input type="text" class="form-control" placeholder="Username" required>-->
+    <!--                                    </div>-->
+    <!--                                    <div class="form-group">-->
+    <!--                                        <input id="password-field" type="password" class="form-control"-->
+    <!--                                               placeholder="Password" required>-->
+    <!--                                        <span toggle="#password-field"-->
+    <!--                                              class="fa fa-fw fa-eye field-icon toggle-password"></span>-->
+    <!--                                    </div>-->
+    <!--                                    <div class="form-group">-->
+    <!--                                        <button type="submit" class="form-control btn btn-primary submit px-3">Sign In-->
+    <!--                                        </button>-->
+    <!--                                    </div>-->
+    <!--                                    <div class="form-group d-md-flex">-->
+    <!--                                        <div class="w-50">-->
+    <!--                                            <label class="checkbox-wrap checkbox-primary">Remember Me-->
+    <!--                                                <input type="checkbox" checked>-->
+    <!--                                                <span class="checkmark"></span>-->
+    <!--                                            </label>-->
+    <!--                                        </div>-->
+    <!--                                        <div class="w-50 text-md-right">-->
+    <!--                                            <a href="#" style="color: #fff">Forgot Password</a>-->
+    <!--                                        </div>-->
+    <!--                                    </div>-->
+    <!--                                </form>-->
+    <!--                                <p class="w-100 text-center">&mdash; Or Sign In With &mdash;</p>-->
+    <!--                                <div class="social d-flex text-center">-->
+    <!--                                    <a href="#" class="px-2 py-2 mr-md-1 rounded"><span-->
+    <!--                                            class="ion-logo-facebook mr-2"></span> Facebook</a>-->
+    <!--                                    <a href="#" class="px-2 py-2 ml-md-1 rounded"><span-->
+    <!--                                            class="ion-logo-twitter mr-2"></span> Twitter</a>-->
+    <!--                                </div>-->
+    <!--                            </div>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </section>-->
+    <!--        </div>-->
+    <!--    </div>-->
+
+    <!-- Footer -->
+    <div id="footer">
+        <div class="container">
+            <div class="col-12">
+
+                <!-- Contact -->
+                <section class="footer-contact">
+                    <header>
+                        <h3>Надеюсь, вам понравилась моя работа</h3>
+                    </header>
+                    <p class="text-center">Семестровая работа Гафаровой Камиллы, группа 11-106</p>
+                    <ul class="icons">
+                        <li><a href="https://vk.com/id120630797" class="icon brands fa-vk"><span class="label">Vk</span></a>
+                        </li>
+                        <li><a href="https://t.me/kama_llama" class="icon brands fa-telegram"><span class="label">Telegram</span></a>
+                        </li>
+                        <li><a href="https://github.com/kamilla11/sem-work-1" class="icon brands fa-github"><span class="label">GitHub</span></a>
+                        </li>
+                    </ul>
+                </section>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.dropotron.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/jquery.scrollex.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/popper.js"></script>
+<script src="assets/js/login.js"></script>
+
+<!-- End Javascript -->
+</body>
+</html>

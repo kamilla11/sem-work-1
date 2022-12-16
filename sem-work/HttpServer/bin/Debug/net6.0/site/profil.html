@@ -1,0 +1,205 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Эрмитаж</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <!-- Styles -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/assets/css/animate.css" rel="stylesheet" type="text/css"/>
+    <link href="/assets/css/main.css" rel="stylesheet" type="text/css"/>
+    <link rel="icon" href="/assets/images/icon.png"/>
+    <noscript>
+        <link rel="stylesheet" href="/assets/css/noscript.css"/>
+    </noscript>
+</head>
+<body class="no-sidebar">
+<div id="page-wrapper">
+
+    <!-- Header -->
+    <div id="header">
+
+        <!-- Inner -->
+        <div class="inner">
+            <header>
+                <h1 id="logo">Личная страница пользователя</h1>
+            </header>
+        </div>
+
+
+        <!-- Nav -->
+        <nav id="nav">
+            <ul>
+                <li><a href="/main">Главная</a></li>
+                <li>
+                    <a href="#">События</a>
+                    <ul>
+                        <li><a href="/exhibitions">Выставки</a></li>
+                        <li><a href="/events">Мероприятия</a></li>
+                    </ul>
+                </li>
+                <li><a href="/expositions">Экспозиции</a></li>
+                <li><a href="/accounts">Профиль</a></li>
+            </ul>
+        </nav>
+
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="profile-nav col-md-3">
+                <div class="panel">
+                    <div class="user-heading round">
+                        <a href="#">
+                            {{ if account.gender == "Женщина"}}
+                            <img src="/assets/images/avatar1.jpg" alt="">
+                            {{else if account.gender == "Мужчина"}}
+                            <img src="/assets/images/avatar3.jpg" alt="">
+                            {{else}}
+                            <img src="/assets/images/avatar2.jpg" alt="">
+                            {{end}}
+
+                           
+                            <!--                            <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="">-->
+                        </a>
+                        <h1>{{account.name}}</h1>
+                    </div>
+
+                    <ul class="nav nav-pills nav-stacked">
+                        <li class="active"><a href="#"> <i class="fa fa-user"></i> Profile</a></li>
+<!--                        <li><a href="/accounts/getCollection/{{account.id}}"> <i class="fa fa-calendar"></i>Events</a></li>-->
+                    </ul>
+                </div>
+            </div>
+            <div class="profile-info col-md-9">
+
+                <div class="col-md-8 user-card">
+                    {{ if show == true}}
+                    <div class="user-profile-form">
+                        <h3>Email</h3>
+                        <p>{{account.email}}</p>
+                        <hr>
+                        <h3>Password</h3>
+                        <p>{{account.password}}</p>
+                        <hr>
+                        <h3>Name</h3>
+                        <p>{{account.name}}</p>
+                        <hr>
+                        <h3>Surname</h3>
+                        <p>{{account.surname}}</p>
+                        <hr>
+                        <h3>Gender</h3>
+                        {{ if account.gender == "Женщина"}}
+                        <p>Женщина</p>
+                        {{else if account.gender == "Мужчина"}}
+                        <p>Мужчина</p>
+                        {{else}}
+                        <p>Небинарная личность</p>
+                        {{end}}
+
+                        <a href="/accounts/editAccount/{{account.id}}">
+                            <button>Edit</button>
+                        </a>
+                    </div>
+                    {{ else }}
+                    <form class="user-profile-form" method="post" action="/accounts/updateAccount">
+
+                        <div class="hidden-id">
+                            <label for="id">Id</label>
+                            <input type="text" value="{{account.id}}" id="id" name="id" readonly>
+                        </div>
+
+
+                        <h3><label for="email">Email</label></h3>
+                        <input type="text" value="{{account.email}}" id="email" name="email">
+
+                        <h3><label for="password">Password</label></h3>
+                        <input type="text" value="{{account.password}}" id="password" name="password">
+
+                        <h3><label for="name">Name</label></h3>
+                        <input type="text" value="{{account.name}}" id="name" name="name">
+
+                        <h3><label for="surname">Surname</label></h3>
+                        <input type="text" value="{{account.surname}}" id="surname" name="surname">
+
+                        <h3><label for="gender">Gender</label></h3>
+                        <select id="gender" name="gender">
+                            {{ if account.gender == "Женщина"}}
+                            <option disabled>Укажите гендер</option>
+                            <option selected value="female" >Женщина</option>
+                            <option value="male">Мужчина</option>
+                            <option value="notABinary">Небинарная личность</option>
+                            {{else if account.gender == "Мужчина"}}
+                            <option disabled>Укажите гендер</option>
+                            <option value="female">Женщина</option>
+                            <option selected value="male">Мужчина</option>
+                            <option value="notABinary">Небинарная личность</option>
+                            {{else}}
+                            <option disabled>Укажите гендер</option>
+                            <option value="female">Женщина</option>
+                            <option value="male">Мужчина</option>
+                            <option selected value="notABinary">Небинарная личность</option>
+                            {{end}}
+                        </select>
+
+                        <button>Save</button>
+                    </form>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Footer -->
+    <div id="footer">
+        <div class="container">
+            <div class="col-12">
+
+                <!-- Contact -->
+                <section class="footer-contact">
+                    <header>
+                        <h3>Надеюсь, вам понравилась моя работа</h3>
+                    </header>
+                    <p class="text-center">Семестровая работа Гафаровой Камиллы, группа 11-106</p>
+                    <ul class="icons">
+                        <li><a href="https://vk.com/id120630797" class="icon brands fa-vk"><span class="label">Vk</span></a>
+                        </li>
+                        <li><a href="https://t.me/kama_llama" class="icon brands fa-telegram"><span class="label">Telegram</span></a>
+                        </li>
+                        <li><a href="https://github.com/kamilla11/sem-work-1" class="icon brands fa-github"><span
+                                class="label">GitHub</span></a>
+                        </li>
+                    </ul>
+                </section>
+
+
+            </div>
+        </div>
+    </div>
+    <!-- End Footer -->
+</div>
+
+<!-- Scripts -->
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/jquery.dropotron.min.js"></script>
+<script src="/assets/js/jquery.scrolly.min.js"></script>
+<script src="/assets/js/jquery.scrollex.min.js"></script>
+<script src="/assets/js/browser.min.js"></script>
+<script src="/assets/js/breakpoints.min.js"></script>
+<script src="/assets/js/util.js"></script>
+<script src="/assets/js/wow.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="js/global.min.js"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/jquery.dropotron.min.js"></script>
+<script src="/assets/js/jquery.scrolly.min.js"></script>
+<script src="/assets/js/jquery.scrollex.min.js"></script>
+<script src="/assets/js/browser.min.js"></script>
+<script src="/assets/js/breakpoints.min.js"></script>
+<script src="/assets/js/util.js"></script>
+<script>
+    new WOW().init();
+</script>
+</body>
+</html>

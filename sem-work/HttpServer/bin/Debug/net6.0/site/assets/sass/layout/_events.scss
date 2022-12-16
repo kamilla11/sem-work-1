@@ -1,0 +1,133 @@
+/* Works - Horizontal Gallery */
+@import '../bootstrapStyle';
+
+.swiper-container {
+  width: 100%;
+  height: 100%;
+  margin-bottom: 5rem;
+}
+
+@media (max-width: 1200px) {
+  .swiper-container {
+    padding: 0 20px 0;
+  }
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+:root {
+  --swiper-theme-color: #000;
+}
+
+.swiper-pagination {
+  display: none;
+}
+
+
+/* Works */
+
+.works {
+  font-size: 1em;
+  padding-top: 4rem;
+  padding-bottom: 5rem;
+}
+
+
+.events-container {
+  //text-align: center;
+  padding: 4rem 0;
+  //margin:2rem;
+  display: flex;
+  flex-direction: column;
+  //flex-wrap: wrap;
+  // flex-flow: column wrap;
+  width: 100%;
+  justify-content: space-between;
+  //margin-bottom: 4rem;
+  align-items: center;
+
+  div.event:last-child {
+    border-bottom: 4px solid #1b1e21;
+  }
+}
+
+.event {
+  //justify-content: center;
+  border-top: 4px solid #706f6f;
+  display: flex;
+  padding: 1.3rem;
+  width: 70%;
+  flex-direction: column;
+
+  strong{
+    color:$brand-white;
+    text-decoration: underline;
+  }
+  
+  h3 {
+    font-size: 2em;
+  }
+
+  //div {
+  //  align-self: center;
+  //}
+}
+
+.event_title {
+  //width: 80%;
+  // padding-right: 20px;
+
+
+}
+
+.event_sum {
+  justify-content: center;
+
+  display: flex;
+  align-items: flex-start;
+  //flex-direction: column;
+
+  //div {
+  //  align-self: center;
+  //}
+
+  p {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+
+  .col1 {
+    width: 65%;
+    padding-right: 2rem;
+  }
+
+  .col2 {
+    display: flex;
+    flex-direction: column;
+    width: 35%;
+    
+    p{
+      margin-bottom: 0.7em;
+      line-height: normal;
+      -epub-hyphens: auto;
+      font-size: 0.95em;
+    }
+  }
+}
