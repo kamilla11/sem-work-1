@@ -2,15 +2,18 @@ using System.Text;
 using System.Text.RegularExpressions;
 using HttpServer.Attributes;
 using HttpServer.MyORM;
+using HttpServer.Services;
 
 namespace HttpServer.Controllers;
 
 [HttpController("accounts")]
 internal class AccountsController : Controller
 {
-    private static string _connectionStr = "Server=localhost;Database=museum;Port=5432;SSLMode=Prefer";
+    private static string _connectionStr = GlobalSettings.ConnectionString;
 
     private static AccountDAO _accountDao = new AccountDAO(_connectionStr);
+
+    private static DataService _dataService = new DataService();
 
     [HttpGET("accounts")]
     public string accounts(string path, int userId)
@@ -74,12 +77,13 @@ internal class AccountsController : Controller
                 break;
         }
 
+        var hashPassword = Hash.ComputePasswordHash(password);
 
         var res = _accountDao.Insert(new Account()
-            { Email = email, Password = password, Name = name, Surname = surname, Gender = gender });
+            { Email = email, Password = hashPassword, Name = name, Surname = surname, Gender = gender });
 
         var path = "./site/profil.html";
-        var account = _accountDao.GetAccount(email, password);
+        var account = _accountDao.GetAccount(email, hashPassword);
         var stringResult = CreateHtmlCode(path, new { Account = account, Show = true });
         return (true, account, stringResult);
     }
@@ -132,32 +136,9 @@ internal class AccountsController : Controller
         return (items.Item1, items.Item2, rememb);
     }
 
-    private string accountsWithError(bool isUserExist, bool isEmailCorrect, bool isPasswordCorrect, bool isNameCorrect,
-        bool isSurnameCorrect)
-    {
-        return CreateHtmlCode("./site/login.html",
-            new
-            {
-                IsUserExist = isUserExist, IsEmailCorrect = isEmailCorrect, IsPasswordCorrect = isPasswordCorrect,
-                IsNameCorrect = isNameCorrect, IsSurnameCorrect = isSurnameCorrect
-            });
-    }
-
     private string? CheckRegistrationData(string email, string password, string name, string surname)
     {
-        var regex1 = new Regex(@"([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)");
-        var isEmailCorrect = regex1.IsMatch(email);
-
-        var regex2 = new Regex(@"^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$");
-        var isNameCorrect = regex2.IsMatch(name);
-        var isSurnameCorrect = regex2.IsMatch(surname);
-
-        var regex3 = new Regex(@"^[a-zA-Z0-9]{8,20}$");
-        var isPasswordCorrect = regex3.IsMatch(password);
-
-        if (!isEmailCorrect || !isNameCorrect || !isSurnameCorrect || !isPasswordCorrect)
-            return accountsWithError(true, isEmailCorrect, isPasswordCorrect, isNameCorrect, isSurnameCorrect);
-
-        return null;
+        var result = _dataService.CheckData(email, password, name, surname);
+        return (result.IsAllCorrect) ? null : CreateHtmlCode("./site/login.html", result);
     }
 }

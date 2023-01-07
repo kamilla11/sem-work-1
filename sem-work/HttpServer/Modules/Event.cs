@@ -1,7 +1,8 @@
 namespace HttpServer;
 
-public class Event: EntityBase
+public class Event
 {
+    public int Id { get; set; }
     public string? Name { get; set; }
     public string? Speaker { get; set; }
     public string? Date { get; set; }

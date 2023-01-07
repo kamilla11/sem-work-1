@@ -11,10 +11,8 @@ namespace HttpServer;
 public class ResponseProvider
 {
     private HttpListenerContext _listenerContext;
-    private static string _connectionStr = "Server=localhost;Database=museum;Port=5432;SSLMode=Prefer";
-
+    private static string _connectionStr = GlobalSettings.ConnectionString;
     private SessionManager _sessionManager;
-    
     private ServerSettings _serverSettings;
 
     public ResponseProvider(ServerSettings serverSettings, HttpListenerContext listenerContext,
@@ -22,7 +20,6 @@ public class ResponseProvider
     {
         _listenerContext = listenerContext;
         _sessionManager = sessionManager;
-
         _serverSettings = serverSettings;
     }
 
@@ -82,7 +79,7 @@ public class ResponseProvider
 
         // объект ответа
         HttpListenerResponse response = _listenerContext.Response;
-        
+
 
         if (request.Url.Segments.Length < 2)
         {
@@ -92,15 +89,6 @@ public class ResponseProvider
 
         string controllerName = request.Url.Segments[1].Replace("/", "");
 
-        string methodName;
-        if (request.Url.Segments.Length < 3)
-        {
-            methodName = controllerName;
-        }
-        else
-        {
-            methodName = request.Url.Segments[2].Replace("/", "");
-        }
 
         string[] strParams = { };
         object[] queryParams = { };
@@ -108,8 +96,30 @@ public class ResponseProvider
         Type controller;
         if (!TryGetController(out controller, controllerName)) return false;
 
-        MethodInfo method;
-        if (!TryGetMethod(out method, controller, methodName, out queryParams, controllerName)) return false;
+        string methodName = "";
+        MethodInfo method = null;
+
+        if (request.Url.Segments.Length < 3)
+        {
+            methodName = controllerName;
+            if (!TryGetMethod(out method, controller, methodName, out queryParams, controllerName)) return false;
+        }
+        else
+        {
+            var index = request.Url.Segments.Length - 1;
+            var isSuccess = false;
+            while (index != 1 && !isSuccess)
+            {
+                var currentName = request.Url.Segments[index].Replace("/", "");
+                index--;
+                if (!TryGetMethod(out method, controller, currentName, out queryParams, controllerName)) continue;
+                isSuccess = true;
+                methodName = currentName;
+            }
+
+            if (!isSuccess) return false;
+        }
+
 
         var cookie = request.Cookies["SessionId"];
         var isCookieAndSessionExist =
@@ -152,9 +162,9 @@ public class ResponseProvider
         }
 
         var ret = method.Invoke(Activator.CreateInstance(controller), queryParams);
-        
+
         response.ContentType = "text/html";
-        buffer = Encoding.UTF8.GetBytes(ret.ToString());
+        if (ret is not null) buffer = Encoding.UTF8.GetBytes(ret.ToString()!);
 
         switch (method.Name)
         {
@@ -164,8 +174,7 @@ public class ResponseProvider
                 var acc = res.Item2;
                 if (res.Item1)
                 {
-                    var guid = _sessionManager.CreateSession(acc.Id,
-                        acc.Email, DateTime.Now);
+                    var guid = _sessionManager.CreateSession(acc.Id, DateTime.Now);
                     var cook = new Cookie("SessionId", guid.ToString());
                     cook.Expires = DateTime.Now.AddDays(1);
                     cook.Path = "/";
@@ -176,7 +185,7 @@ public class ResponseProvider
                 {
                     buffer = Encoding.UTF8.GetBytes(res.Item3);
                 }
-                
+
                 break;
             }
 
@@ -188,8 +197,11 @@ public class ResponseProvider
                     AccountDAO accountDao = new(_connectionStr);
                     var userId = res.Item2!.Value;
                     var account = accountDao.GetById(userId);
-                    var guid = _sessionManager.CreateSession(userId,
-                        account.Email, DateTime.Now);
+                    var guid = (res.Item3)
+                        ? _sessionManager.CreateSession(userId,
+                            DateTime.Now, true)
+                        : _sessionManager.CreateSession(userId,
+                            DateTime.Now);
                     var cook = new Cookie("SessionId", guid.ToString());
                     cook.Expires = (res.Item3) ? DateTime.Now.AddYears(1) : DateTime.Now.AddDays(1);
                     cook.Path = "/";
@@ -202,7 +214,11 @@ public class ResponseProvider
                 {
                     var path = "./site/login.html";
                     buffer = Encoding.UTF8.GetBytes(Controller.CreateHtmlCode(path,
-                        new{IsUserExist = false, IsEmailCorrect = true, IsPasswordCorrect= true, IsNameCorrect= true, IsSurnameCorrect= true}));
+                        new
+                        {
+                            IsUserExist = false, IsEmailCorrect = true, IsPasswordCorrect = true, IsNameCorrect = true,
+                            IsSurnameCorrect = true
+                        }));
                 }
 
                 break;

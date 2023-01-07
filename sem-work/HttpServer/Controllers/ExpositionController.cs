@@ -6,7 +6,7 @@ namespace HttpServer.Controllers;
 [HttpController("expositions")]
 public class ExpositionController : Controller
 {
-    private static string _connectionStr = "Server=localhost;Database=museum;Port=5432;SSLMode=Prefer";
+    private static string _connectionStr = GlobalSettings.ConnectionString;
 
     private static ExpositionDAO _expositionDao = new(_connectionStr);
 

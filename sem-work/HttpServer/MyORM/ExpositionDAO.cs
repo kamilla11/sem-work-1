@@ -13,9 +13,9 @@ public class ExpositionDAO: IDAO<Exposition>
         expositions = GetAll().ToList();
     }
 
-    public Exposition GetById(int id)
+    public Exposition GetById(object id)
     {
-        return new Database(_connectionStr).Select<Exposition>(id);
+        return new Database(_connectionStr).Select<Exposition>((int)id);
     }
 
     public IEnumerable<Exposition> GetAll()
@@ -29,14 +29,14 @@ public class ExpositionDAO: IDAO<Exposition>
         return new Database(_connectionStr).Insert(entity);
     }
 
-    public int Delete(int id)
-    {
-        return new Database(_connectionStr).Delete<Exposition>(id);
-    }
-
     public int Delete(Exposition entity)
     {
         return new Database(_connectionStr).Delete<Exposition>(entity);
+    }
+
+    public int Delete(object id)
+    {
+        return new Database(_connectionStr).Delete<Exposition>((int)id);
     }
 
     public int Update(Exposition entity)

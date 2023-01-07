@@ -1,7 +1,8 @@
 namespace HttpServer;
 
-public class Exhibition: EntityBase
+public class Exhibition
 {
+    public int Id { get; set; }
     public string? Name { get; set; }
     public string? Place { get; set; }
     public DateTime StartDate { get; set; }

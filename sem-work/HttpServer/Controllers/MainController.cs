@@ -6,7 +6,7 @@ namespace HttpServer.Controllers;
 [HttpController("main")]
 public class MainController: Controller
 {
-    private static string _connectionStr = "Server=localhost;Database=museum;Port=5432;SSLMode=Prefer";
+    private static string _connectionStr = GlobalSettings.ConnectionString;
 
     private static TicketDAO _ticketDao = new(_connectionStr);
 

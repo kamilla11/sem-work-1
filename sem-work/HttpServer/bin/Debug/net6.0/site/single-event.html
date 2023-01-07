@@ -75,7 +75,8 @@
         <div class="comments_container">
             <div>
                 <h3>Хочешь оставить отзыв?</h3>
-                <form action="/events/saveComment" method="post">
+                
+                <form id="saveCommentForm">
                     <div class="hidden-id">
                         <label for="userId">Id</label>
                         <input type="text" value="{{id}}" id="userId" name="userId" readonly>
@@ -84,47 +85,93 @@
                     </div>
 
                     <h3><label for="comment">Комментарий</label></h3>
-                    <textarea class="comment_textarea" name="comment" id="comment" cols="30" rows="3"
+                    <textarea class="comment_textarea" name="comment" id="comment" cols="30" rows="2"
                               placeholder="Оставьте свой комментарий здесь..."></textarea>
                     {{if id == -1}}
                     <div class="div-disabled com_button">
-                        <button class="disabled" disabled>Войдите в систему</button>
+                        <input disabled type="submit" value="Войдите в систему">
+<!--                        <button class="disabled" disabled>Войдите в систему</button>-->
                     </div>
                     {{else}}
                     <div class="com_button">
-                        <button>Сохранить</button>
+                        <input type="submit" value="Сохранить">
+<!--                        <button id="save_comm_btn">Сохранить</button>-->
                     </div>
 
                     {{end}}
                 </form>
+                
+<!--                <form action="/events/saveComment" method="post">-->
+<!--                    <div class="hidden-id">-->
+<!--                        <label for="userId">Id</label>-->
+<!--                        <input type="text" value="{{id}}" id="userId" name="userId" readonly>-->
+<!--                        <label for="eventId">Id</label>-->
+<!--                        <input type="text" value="{{event.id}}" id="eventId" name="eventId" readonly>-->
+<!--                    </div>-->
+
+<!--                    <h3><label for="comment">Комментарий</label></h3>-->
+<!--                    <textarea class="comment_textarea" name="comment" id="comment" cols="30" rows="3"-->
+<!--                              placeholder="Оставьте свой комментарий здесь..."></textarea>-->
+<!--                    {{if id == -1}}-->
+<!--                    <div class="div-disabled com_button">-->
+<!--                        <button class="disabled" disabled>Войдите в систему</button>-->
+<!--                    </div>-->
+<!--                    {{else}}-->
+<!--                    <div class="com_button">-->
+<!--                        <button id="save_comm_btn">Сохранить</button>-->
+<!--                    </div>-->
+
+<!--                    {{end}}-->
+<!--                </form>-->
             </div>
 
-            <div class="comments">
+            <div class="comments" id="comments">
                 {{for comment in comments}}
                 <h3>{{comment.email}}</h3>
                 <div class="comment">
                     <p>{{comment.text}}</p>
                     {{if comment.user_id == id}}
                     <div class="com_tools">
-                        <a href="javascript:void(0)" onclick="showHide('comment-edit-form')"
+                        <a href="javascript:void(0)" onclick="showHide('comment{{comment.id}}-edit-form')"
                            class="icon regular fa-edit"><span class="label">Изменить</span></a>
-                        <a href="/events/deleteComment/{{event.id}}/{{comment.id}}"
+                        <a href="javascript:void(0)" onclick="deleteComment('{{id}}','{{event.id}}', '{{comment.id}}')"
                            class="icon regular fa-trash-alt"><span class="label">Удалить</span></a>
                     </div>
                     {{end}}
                 </div>
 
-                <div class="comment comment-edit-form" id="comment-edit-form">
-                    <form action="/events/saveCommentUpdates" method="post">
+                <div class="comment comment-edit-form" id="comment{{comment.id}}-edit-form">
+                    <form id="updateCommentForm{{comment.id}}">
                         <div class="hidden-id">
-                            <input type="text" value="{{id}}" name="userId" readonly>
-                            <input type="text" value="{{event.id}}" name="eventId" readonly>
-                            <input type="text" value="{{comment.id}}" name="eventId" readonly>
+                            <input type="text" value="{{id}}" name="userId" id="updateUserId{{comment.id}}" readonly>
+                            <input type="text" value="{{event.id}}" name="eventId" id="updateEventId{{comment.id}}" readonly>
+                            <input type="text" value="{{comment.id}}" name="commentId" id="updateCommentId{{comment.id}}"  readonly>
                         </div>
-                        <textarea class="comment" name="comment" id="commentUpd" cols="30"
+                        <textarea class="comment" name="commentUpd" id="commentUpd{{comment.id}}" cols="30"
                                   rows="3">{{comment.text}}</textarea>
-                        <button>Сохранить</button>
+                        <a href="javascript:void(0)" onclick="updateComment('{{comment.id}}')">Сохранить</a>
+                        <!--        <input type="submit" value="Сохранить">-->
                     </form>
+<!--                    <form id="updateCommentForm{{comment.id}}">-->
+<!--                        <div class="hidden-id">-->
+<!--                            <input type="text" value="{{id}}" name="userId" id="updateUserId" readonly>-->
+<!--                            <input type="text" value="{{event.id}}" name="eventId" id="updateEventId" readonly>-->
+<!--                            <input type="text" value="{{comment.id}}" name="commentId" id="updateCommentId"  readonly>-->
+<!--                        </div>-->
+<!--                        <textarea class="comment" name="commentUpd" id="commentUpd" cols="30"-->
+<!--                                  rows="3">{{comment.text}}</textarea>-->
+<!--                        <input type="submit" value="Сохранить">-->
+<!--                    </form>-->
+<!--                    <form action="/events/saveCommentUpdates" method="post">-->
+<!--                        <div class="hidden-id">-->
+<!--                            <input type="text" value="{{id}}" name="userId" readonly>-->
+<!--                            <input type="text" value="{{event.id}}" name="eventId" readonly>-->
+<!--                            <input type="text" value="{{comment.id}}" name="eventId" readonly>-->
+<!--                        </div>-->
+<!--                        <textarea class="comment" name="comment" id="commentUpd" cols="30"-->
+<!--                                  rows="3">{{comment.text}}</textarea>-->
+<!--                        <button id="save_comm_btn">Сохранить</button>-->
+<!--                    </form>-->
                 </div>
                 {{end}}
                 

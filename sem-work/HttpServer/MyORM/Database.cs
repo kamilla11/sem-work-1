@@ -9,7 +9,7 @@ public class Database
     //method to check database correct working
     public static void Check()
     {
-        string _connectionStr = "Server=localhost;Database=museum;Port=5432;SSLMode=Prefer";
+        string _connectionStr = GlobalSettings.ConnectionString;
         //var acc = new Database(_connectionStr).Select<Account>(2);
 
         //new Database(_connectionStr).Delete(new Account { Id = 2, Login = "hihihi", Password = "hahaha" });
@@ -49,6 +49,12 @@ public class Database
         return ExecuteQuery<T>($"select * from public.\"{tableName}\" where id = {id}").FirstOrDefault();
     }
     
+    public T Select<T>(Guid id)
+    {
+        var tableName = typeof(T).Name.ToLower();
+        return ExecuteQuery<T>($"select * from public.\"{tableName}\" where id::text = '{id}'").FirstOrDefault();
+    }
+    
     public int Insert<T>(T obj)
     {
         var t = typeof(T);
@@ -57,6 +63,11 @@ public class Database
         t.GetProperties().ToList().ForEach(p =>
         {
             var name = p.Name.ToLower();
+            if (p.PropertyType.Name == "Guid" && name == "id")
+            {
+                nameList.Add(name);
+                AddParameter("@" + name, p.GetValue(obj));
+            }
             if (name != "id")
             {
                 nameList.Add(name);
@@ -107,8 +118,17 @@ public class Database
         {
             var val = p.GetValue(obj);
             var name = p.Name.ToLower();
-            AddParameter("@" + name, val);
-            return name + "=@" + name;
+            if (name == "id")
+            {
+                AddParameter("@" + name, val.ToString());
+                return name + "::text=@" + name;
+            }
+            else
+            {
+                AddParameter("@" + name, val);
+                return name + "=@" + name;
+            }
+           
         }));
         var query = $"delete from public.\"{tableName}\" where {values}";
         return ExecuteNonQuery(query);
@@ -121,21 +141,29 @@ public class Database
         AddParameter("@id", id);
         return ExecuteNonQuery($"delete from public.\"{tableName}\" where id=@id");
     }
+    
+    public int Delete<T>(Guid id)
+    {
+        var t = typeof(T);
+        var tableName = t.Name.ToLower();
+        AddParameter("@id", id.ToString());
+        return ExecuteNonQuery($"delete from public.\"{tableName}\" where id::text=@id");
+    }
 
     public int Update<T>(T obj)
     {
         var t = typeof(T);
         var tableName = t.Name.ToLower();
         var properties = t.GetProperties();
-        var values = string.Join(", ", properties.Take(properties.Length-1).Select(p =>
+        var values = string.Join(", ", properties.Where(p=>p.Name.ToLower()!="id").Select(p =>
         {
             var val = p.GetValue(obj);
             var name = p.Name.ToLower();
             AddParameter("@" + name, val);
                 return name + "=@" + name;
         }));
-        AddParameter("@id", properties.Last().GetValue(obj));
-        return ExecuteNonQuery($"update public.\"{tableName}\" set {values} where id=@id");
+        AddParameter("@id", properties.First().GetValue(obj).ToString());
+        return ExecuteNonQuery($"update public.\"{tableName}\" set {values} where id::text=@id");
     }
 
     public Database AddParameter<T>(string name, T value)

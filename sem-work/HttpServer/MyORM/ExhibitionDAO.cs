@@ -13,9 +13,9 @@ public class ExhibitionDAO: IDAO<Exhibition>
         exhibitions = GetAll().ToList();
     }
 
-    public Exhibition GetById(int id)
+    public Exhibition GetById(object id)
     {
-        return new Database(_connectionStr).Select<Exhibition>(id);
+        return new Database(_connectionStr).Select<Exhibition>((int)id);
     }
 
     public IEnumerable<Exhibition> GetAll()
@@ -29,9 +29,9 @@ public class ExhibitionDAO: IDAO<Exhibition>
         return new Database(_connectionStr).Insert(entity);
     }
 
-    public int Delete(int id)
+    public int Delete(object id)
     {
-        return new Database(_connectionStr).Delete<Exhibition>(id);
+        return new Database(_connectionStr).Delete<Exhibition>((int)id);
     }
 
     public int Delete(Exhibition entity)

@@ -1,11 +1,11 @@
 namespace HttpServer.Interfaces;
 
-public interface IDAO<T> where T : EntityBase
+public interface IDAO<T>
 {
-    T GetById(int id);
+    T? GetById(object id);
     IEnumerable<T> GetAll();
     int Insert(T entity);
     int Update(T entity);
     int Delete(T entity);
-    int Delete(int id);
+    int Delete(object id);
 }

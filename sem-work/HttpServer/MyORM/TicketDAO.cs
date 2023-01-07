@@ -13,9 +13,9 @@ public class TicketDAO:IDAO<Ticket>
         tickets = GetAll().ToList();
     }
 
-    public Ticket GetById(int id)
+    public Ticket GetById(object id)
     {
-        return new Database(_connectionStr).Select<Ticket>(id);
+        return new Database(_connectionStr).Select<Ticket>((int)id);
     }
 
     public IEnumerable<Ticket> GetAll()
@@ -29,9 +29,9 @@ public class TicketDAO:IDAO<Ticket>
         return new Database(_connectionStr).Insert(entity);
     }
 
-    public int Delete(int id)
+    public int Delete(object id)
     {
-        return new Database(_connectionStr).Delete<Ticket>(id);
+        return new Database(_connectionStr).Delete<Ticket>((int)id);
     }
 
     public int Delete(Ticket entity)

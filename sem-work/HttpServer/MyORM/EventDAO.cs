@@ -13,9 +13,9 @@ public class EventDAO: IDAO<Event>
         events = GetAll().ToList();
     }
 
-    public Event GetById(int id)
+    public Event GetById(object id)
     {
-        return new Database(_connectionStr).Select<Event>(id);
+        return new Database(_connectionStr).Select<Event>((int)id);
     }
 
     public IEnumerable<Event> GetAll()
@@ -29,9 +29,9 @@ public class EventDAO: IDAO<Event>
         return new Database(_connectionStr).Insert(entity);
     }
 
-    public int Delete(int id)
+    public int Delete(object id)
     {
-        return new Database(_connectionStr).Delete<Event>(id);
+        return new Database(_connectionStr).Delete<Event>((int)id);
     }
 
     public int Delete(Event entity)

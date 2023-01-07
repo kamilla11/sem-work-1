@@ -13,9 +13,9 @@ public class PaintingDAO: IDAO<Painting>
         paintings = GetAll().ToList();
     }
 
-    public Painting GetById(int id)
+    public Painting GetById(object id)
     {
-        return new Database(_connectionStr).Select<Painting>(id);
+        return new Database(_connectionStr).Select<Painting>((int)id);
     }
     
     public IEnumerable<Painting> GetByExpositionId(int id)
@@ -34,9 +34,9 @@ public class PaintingDAO: IDAO<Painting>
         return new Database(_connectionStr).Insert(entity);
     }
 
-    public int Delete(int id)
+    public int Delete(object id)
     {
-        return new Database(_connectionStr).Delete<Painting>(id);
+        return new Database(_connectionStr).Delete<Painting>((int)id);
     }
 
     public int Delete(Painting entity)

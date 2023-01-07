@@ -13,9 +13,9 @@ public class CommentDAO : IDAO<Comment>
         _connectionStr = connectionString;
     }
 
-    public Comment GetById(int id)
+    public Comment GetById(object id)
     {
-        return new Database(_connectionStr).Select<Comment>(id);
+        return new Database(_connectionStr).Select<Comment>((int)id);
     }
 
     public IEnumerable<Comment> GetAll()
@@ -34,9 +34,9 @@ public class CommentDAO : IDAO<Comment>
         return new Database(_connectionStr).Insert(entity);
     }
 
-    public int Delete(int id)
+    public int Delete(object id)
     {
-        return new Database(_connectionStr).Delete<Comment>(id);
+        return new Database(_connectionStr).Delete<Comment>((int)id);
     }
 
     public int Delete(Comment entity)

@@ -1,4 +1,5 @@
 using HttpServer.Interfaces;
+using HttpServer.Services;
 
 namespace HttpServer.MyORM;
 
@@ -12,9 +13,9 @@ public class AccountDAO: IDAO<Account>
         _connectionStr = connectionString;
     }
 
-    public Account GetById(int id)
+    public Account GetById(object id)
     {
-        return new Database(_connectionStr).Select<Account>(id);
+        return new Database(_connectionStr).Select<Account>((int)id);
     }
 
     public Account GetAccount(string login, string password)
@@ -35,9 +36,9 @@ public class AccountDAO: IDAO<Account>
         return new Database(_connectionStr).Insert(entity);
     }
 
-    public int Delete(int id)
+    public int Delete(object id)
     {
-        return new Database(_connectionStr).Delete<Account>(id);
+        return new Database(_connectionStr).Delete<Account>((int)id);
     }
 
     public int Delete(Account entity)
@@ -52,8 +53,10 @@ public class AccountDAO: IDAO<Account>
 
     public (bool, int?) VerifyLoginAndPassword(string login, string password)
     {
-        var account = Accounts.Find(a => a.Email == login && a.Password == password);
-        if (account is not null) return (true, account.Id);
+        var account = Accounts.Find(a => a.Email == login);
+        if (account is null)  return (false, null);
+        var isValid = Hash.IsPasswordValid(password, account.Password!);
+        if(isValid) return (true, account.Id);
         return (false, null);
     }
 }
