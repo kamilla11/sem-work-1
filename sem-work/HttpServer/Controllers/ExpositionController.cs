@@ -11,7 +11,7 @@ public class ExpositionController : Controller
     private static ExpositionDAO _expositionDao = new(_connectionStr);
 
     [HttpGET("expositions")]
-    public string expositions(string path)
+    public string expositions(string path, int userId)
     {
         var expositions = _expositionDao.GetAll();
         if (expositions is null) return "exhibitions not found";

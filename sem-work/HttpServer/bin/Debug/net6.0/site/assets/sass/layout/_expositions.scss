@@ -1,57 +1,29 @@
 @import '../bootstrapStyle';
-/* =======================================================
-*
-* 	Template Style 
-*	Edit this section
-*
-* ======================================================= */
 
-// Template Base
 html, body {
   overflow-x: hidden;
 }
-//body {
-//  font-family: $font-primary;
-//  font-weight: 400;
-//  font-size: 16px;
-//  line-height: 1.8;
-//  color: #7f7f7f;
-//  background: #fff;
-//  height: 100%;
-//  position: relative;
-//}
 
 a {
-  //color:#f0f4f4;
   color: $brand-primary;
   @include transition(.5s);
+
   &:hover, &:active, &:focus {
-    //color: $brand-primary;
     color: $brand-gold;
     outline: none;
   }
 }
-//p {
-//  margin-bottom: 30px;
-//}
 
 h1, h2, h3, h4, h5, h6, figure {
-  //color: $brand-black;
-  //font-family: $font-primary;
   font-weight: 400;
   margin: 0 0 30px 0;
 }
-::-webkit-selection {
-  //color: $brand-white;
+
+::-moz-selection {
   background: $brand-primary;
 }
 
-::-moz-selection {
-  //color: $brand-white;
-  background: $brand-primary;
-}
 ::selection {
-  //color: $brand-white;
   background: $brand-primary;
 }
 
@@ -59,10 +31,10 @@ h1, h2, h3, h4, h5, h6, figure {
   position: relative;
   overflow-x: hidden;
 }
+
 #fh5co-aside {
 
   position: fixed;
-  left: 0;
   bottom: 0;
   top: 0;
   left: -50%;
@@ -85,10 +57,12 @@ h1, h2, h3, h4, h5, h6, figure {
     background: $brand-black url('../images/img_7.jpg') no-repeat;
     z-index: 1;
   }
+
   > .row {
     z-index: 5;
     position: relative;
   }
+
   .overlay {
     position: absolute;
     top: 0;
@@ -98,33 +72,36 @@ h1, h2, h3, h4, h5, h6, figure {
     background: rgba(0, 0, 0, .7);
     z-index: 2;
   }
+
   h2 {
     color: $brand-white;
   }
+
   #fh5co-aside-inner {
     height: 100%;
     position: relative;
   }
+
   #fh5co-bio {
     opacity: 0;
   }
+
   @media screen and (max-width: $screen-xs) {
     left: -85%;
     width: 85%;
   }
   @include transition(.5s);
-
-
 }
+
 .aside-toggle, .back-to-home {
   position: fixed;
   top: 20px;
   left: 20px;
   z-index: 100;
   @include transition(.5s);
+
   a {
     background: $brand-black;
-    // padding: 10px 15px;
     font-size: 13px;
     width: 100px;
     height: 100px;
@@ -138,11 +115,13 @@ h1, h2, h3, h4, h5, h6, figure {
     @include inline-block;
     @include border-radius(50%);
     @include transition(.5s);
+
     &:hover, &:active, &:focus {
       text-decoration: none;
       outline: none;
       @include border-radius(50%);
     }
+
     span {
       width: 100px;
       height: 100px;
@@ -163,6 +142,7 @@ h1, h2, h3, h4, h5, h6, figure {
       @include transition(.3s)
 
     }
+
     em {
       width: 100px;
       height: 100px;
@@ -178,12 +158,14 @@ h1, h2, h3, h4, h5, h6, figure {
       visibility: visible;
       @include transition(.3s);
     }
+
     &:hover {
       -webkit-transition-delay: .2s; /* Safari */
       -moz-transition-delay: .2s;
       transition-delay: .2s;
 
       background: transparent;
+
       em {
         color: $brand-white;
         opacity: 0;
@@ -194,6 +176,7 @@ h1, h2, h3, h4, h5, h6, figure {
         -o-transform: scale(0.0);
         transform: scale(0.0);
       }
+
       span {
         -webkit-transform: scale(1.0);
         -moz-transform: scale(1.0);
@@ -202,9 +185,8 @@ h1, h2, h3, h4, h5, h6, figure {
         transform: scale(1.0);
         margin-left: 0px;
       }
-
-
     }
+
     @media screen and (max-width: $screen-sm) {
       width: 80px;
       height: 80px;
@@ -217,10 +199,12 @@ h1, h2, h3, h4, h5, h6, figure {
     }
   }
 }
+
 .back-to-home {
-  left: inherit!important;
+  left: inherit !important;
   right: 20px;
 }
+
 #fh5co-image-grid {
   margin-top: 15px;
   padding-bottom: 15px;
@@ -229,11 +213,14 @@ h1, h2, h3, h4, h5, h6, figure {
   height: 100%;
   position: relative;
   @include transition(.5s);
+
   .grid {
     position: relative;
   }
+
   .item {
     position: relative;
+
     a {
       position: relative;
       float: left;
@@ -243,17 +230,19 @@ h1, h2, h3, h4, h5, h6, figure {
         position: relative;
         z-index: 1;
         overflow: hidden;
+
         img {
           @include transition(.5s);
         }
       }
+
       .text-wrap {
         position: absolute;
         top: 0;
         bottom: 0;
         right: 0;
         left: 0;
-        width : 100%;
+        width: 100%;
         z-index: 2;
         vertical-align: middle;
         @include gradientOpacity();
@@ -265,32 +254,12 @@ h1, h2, h3, h4, h5, h6, figure {
           width: 100%;
           height: 100%;
           display: table;
-          //&:before {
-          //  content: "";
-          //  position: absolute;
-          //  top: 20px;
-          //  right: 20px;
-          //  @include icomoon;
-          //  content: "\f064";
-          //  font-size: 20px;
-          //  color: $brand-white;
-          //}
-          //&.popup {
-          //  &:before {
-          //    content: "";
-          //    position: absolute;
-          //    top: 20px;
-          //    right: 20px;
-          //    @include icomoon;
-          //    content: "\f002";
-          //    font-size: 20px;
-          //    color: $brand-white;
-          //  }
-          //}
+
           > div {
             display: table-cell;
             vertical-align: middle;
             text-align: center;
+
             h2 {
               font-size: 18px;
               margin: 0;
@@ -300,21 +269,24 @@ h1, h2, h3, h4, h5, h6, figure {
                 font-size: 15px;
               }
             }
+
             span {
               display: block;
-              color: rgba(255,2552,255,.5);
+              color: rgba(255, 2552, 255, .5);
               font-size: 12px;
             }
           }
         }
 
       }
+
       &:hover {
         .img-wrap {
           img {
             transform: scale(1.2);
           }
         }
+
         .text-wrap {
           opacity: 1;
           visibility: visible;
@@ -333,6 +305,7 @@ h1, h2, h3, h4, h5, h6, figure {
     @include transition(.3s);
     position: relative;
     @include inline-block;
+
     &:hover {
       text-decoration: none;
       color: $brand-white;
@@ -346,6 +319,7 @@ h1, h2, h3, h4, h5, h6, figure {
     }
   }
 }
+
 /* clear fix */
 .grid:after {
   content: '';
@@ -357,7 +331,6 @@ h1, h2, h3, h4, h5, h6, figure {
 
 .grid-sizer,
 .grid-item {
-  // width: 33.333%;
   width: 25%;
   @media screen and (max-width: $screen-lg) {
     width: 33.333%;
@@ -386,17 +359,17 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 
 
-.studio
-{
-  h3{
+.studio {
+  h3 {
     font-size: 3em;
     margin-bottom: 10px;
   }
-  p{
+
+  p {
     margin-bottom: 0;
   }
 }
 
-.aside-about{
+.aside-about {
   padding: 5rem;
 }

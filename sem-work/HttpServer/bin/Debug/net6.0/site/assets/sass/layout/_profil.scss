@@ -7,7 +7,6 @@
   border-radius: 4px;
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
   box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
-  //display: block;
 }
 
 .profile-nav, .profile-info {
@@ -15,7 +14,6 @@
 }
 
 .profile-nav .user-heading {
-  //background: #fbc02d;
   color: #fff;
   border-radius: 4px 4px 0 0;
   -webkit-border-radius: 4px 4px 0 0;
@@ -57,7 +55,7 @@
   border-bottom: 1px solid #ebeae6;
   margin-top: 0;
   line-height: 30px;
-  padding-left:0 ;
+  padding-left: 0;
 }
 
 .profile-nav ul > li:last-child {
@@ -91,7 +89,7 @@
   color: #bcb3aa;
 }
 
-.user-profile-form input[type=text], .user-profile-form input[type=email], .user-profile-form input[type=password], .user-profile-form select, .user-profile-form textarea{
+.user-profile-form input[type=text], .user-profile-form input[type=email], .user-profile-form input[type=password], .user-profile-form select, .user-profile-form textarea {
   -webkit-appearance: none;
   display: block;
   border: none;
@@ -105,40 +103,43 @@
   transition: background-color 0.35s ease-in-out, border-color 0.35s ease-in-out;
 }
 
-.user-profile-form .hidden-id{
+.hidden-id {
   display: none;
 }
 
-.user-profile-form{
-  margin-bottom:4em;
-  
-    :nth-child(2){
+.user-profile-form {
+  margin-bottom: 4em;
+
+  :nth-child(2) {
+    margin-top: 0;
+
+    label {
       margin-top: 0;
-      label{
-        margin-top: 0;
-      }
+    }
   }
-  hr{
+
+  hr {
     margin: 10px 0;
   }
-  h3{
-    margin:0;
+
+  h3 {
+    margin: 0;
   }
 
-  p{
+  p {
     font-size: 1em;
-   
+
   }
-  
+
 }
 
-button{
+button {
   color: #fff;
   background: $brand-gold;
-  
+
   &:hover {
-   
-   color: $brand-gold;
+
+    color: $brand-gold;
     background: #fff;
   }
 }

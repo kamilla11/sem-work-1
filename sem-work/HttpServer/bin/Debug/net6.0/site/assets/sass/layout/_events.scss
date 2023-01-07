@@ -1,4 +1,3 @@
-/* Works - Horizontal Gallery */
 @import '../bootstrapStyle';
 
 .swiper-container {
@@ -16,7 +15,6 @@
 .swiper-slide {
   text-align: center;
   font-size: 18px;
-  /* Center slide text vertically */
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -29,6 +27,12 @@
   -ms-flex-align: center;
   -webkit-align-items: center;
   align-items: center;
+
+  .img-fluid {
+    width: 750px;
+    height: 700px;
+    object-fit: cover;
+  }
 }
 
 :root {
@@ -38,7 +42,6 @@
 .swiper-pagination {
   display: none;
 }
-
 
 /* Works */
 
@@ -50,16 +53,11 @@
 
 
 .events-container {
-  //text-align: center;
   padding: 4rem 0;
-  //margin:2rem;
   display: flex;
   flex-direction: column;
-  //flex-wrap: wrap;
-  // flex-flow: column wrap;
   width: 100%;
   justify-content: space-between;
-  //margin-bottom: 4rem;
   align-items: center;
 
   div.event:last-child {
@@ -68,31 +66,20 @@
 }
 
 .event {
-  //justify-content: center;
   border-top: 4px solid #706f6f;
   display: flex;
   padding: 1.3rem;
   width: 70%;
   flex-direction: column;
 
-  strong{
-    color:$brand-white;
+  strong {
+    color: $brand-white;
     text-decoration: underline;
   }
-  
+
   h3 {
     font-size: 2em;
   }
-
-  //div {
-  //  align-self: center;
-  //}
-}
-
-.event_title {
-  //width: 80%;
-  // padding-right: 20px;
-
 
 }
 
@@ -101,11 +88,6 @@
 
   display: flex;
   align-items: flex-start;
-  //flex-direction: column;
-
-  //div {
-  //  align-self: center;
-  //}
 
   p {
     overflow-wrap: break-word;
@@ -122,12 +104,127 @@
     display: flex;
     flex-direction: column;
     width: 35%;
-    
-    p{
+
+    p {
       margin-bottom: 0.7em;
       line-height: normal;
-      -epub-hyphens: auto;
       font-size: 0.95em;
     }
   }
+}
+
+.single-event {
+  h1 {
+    padding: 15px 0;
+    margin: 0;
+    font-size: 2em;
+  }
+}
+
+.event-description {
+  padding: 2em 1em 0 1em;
+}
+
+.comments_container {
+  padding: 2em 1em;
+  width: 60%;
+
+  @media (max-width: 1000px) {
+    & {
+      width: 100%;
+    }
+  }
+
+  label {
+    margin: 10px 0;
+  }
+
+  input {
+    margin: 0;
+  }
+
+  h3 {
+    margin: 0;
+  }
+
+  .disabled {
+    background: darkgray;
+
+  }
+
+  .div-disabled {
+    button:hover {
+      color: #fff;
+    }
+  }
+}
+
+
+[data-tooltip] {
+  position: relative; /* Относительное позиционирование */
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip); /* Выводим текст */
+  position: absolute; /* Абсолютное позиционирование */
+  width: 300px; /* Ширина подсказки */
+  left: 0;
+  top: 0; /* Положение подсказки */
+  background: rgba(52, 52, 52, 0.2);
+  color: #fff; /* Цвет текста */
+  padding: 0.5em; /* Поля вокруг текста */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Параметры тени */
+  pointer-events: none; /* Подсказка */
+  opacity: 0; /* Подсказка невидима */
+  transition: 1s; /* Время появления подсказки */
+}
+
+[data-tooltip]:hover::after {
+  opacity: 1; /* Показываем подсказку */
+  top: 2em; /* Положение подсказки */
+}
+
+.comment {
+  //min-height: 4em;
+  padding: 1em;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.13);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+  margin-top: 1em;
+  margin-bottom: 2em;
+
+  .com_tools {
+    position: absolute;
+    top: 2px;
+    right: 5px;
+  }
+
+}
+
+.comment_textarea {
+  margin-bottom: 0;
+}
+
+.com_button {
+  margin-bottom: 2em;
+}
+
+.comment-edit-form {
+  display: none;
+}
+
+.error_span {
+  span {
+    line-height: 1em;
+    color: red;
+    font-size: 0.8em;
+  }
+
+  label {
+    margin-top: 0;
+  }
+
 }

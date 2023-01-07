@@ -11,7 +11,7 @@ public class MainController: Controller
     private static TicketDAO _ticketDao = new(_connectionStr);
 
     [HttpGET("main")]
-    public string main(string path)
+    public string main(string path, int userId)
     {
         var tickets = _ticketDao.GetAll();
         if (tickets is null) return "Events not found";

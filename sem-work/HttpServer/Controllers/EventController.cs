@@ -9,83 +9,62 @@ public class EventController : Controller
 {
     private static string _connectionStr = "Server=localhost;Database=museum;Port=5432;SSLMode=Prefer";
 
-    // static byte[] dbSettingsFile = File.ReadAllBytes($"{DBSettings.SettingsPath}");
-    // private DBSettings _dbSettings = JsonSerializer.Deserialize<DBSettings>(dbSettingsFile);
-
-    // private static string Host = "localhost";
-    // private static string User = "root";
-    // private static string DBname = "postgres";
-    // private static string Password = "1234";
-    // private static string Port = "5432";
-
-    private static EventDAO _eventDao = new EventDAO(_connectionStr);
+    private static EventDAO _eventDao = new(_connectionStr);
+    private static AccountDAO _accountDao = new(_connectionStr);
+    private static CommentDAO _commentDao = new(_connectionStr);
 
     [HttpGET("events")]
-    public string events(string path)
+    public string events(string path, int userId)
     {
         var events = _eventDao.GetAll();
         if (events is null) return "Events not found";
         return CreateHtmlCode(path,
-            new { Events = events });
+            new { Events = events, UserId = userId });
     }
 
 
-    // [HttpGET("accounts/getAccounts")]
-    // public string getAccounts()
-    // {
-    //     var accounts = _accountDao.GetAll();
-    //     if (accounts is null) return "Accounts not found";
-    //     var accountList = new StringBuilder();
-    //     foreach (var user in accounts)
-    //     {
-    //         accountList.Append($"User with id = {user.Id}, login =  {user.Email}, password = {user.Password}   ");
-    //     }
-    //
-    //     return accountList.ToString();
-    // }
-    //
-    //
-    // [HttpGET("accounts/getAccountById")]
-    // public string getAccountById(int userId)
-    // {
-    //     var account = _accountDao.GetById(userId);
-    //
-    //     if (account is null) return "User not found";
-    //     return string.Format("User with id = {0}, login =  {1}, password = {2}",
-    //         account.Id.ToString(),
-    //         account.Email,
-    //         account.Password);
-    // }
-    //
-    // [HttpGET("accounts/getAccountInfo")]
-    // public string getAccountInfo(int userId)
-    // {
-    //     var account = _accountDao.GetById(userId);
-    //
-    //     if (account is null) return "User not found";
-    //     return string.Format("User with id = {0}, login =  {1}, password = {2}",
-    //         account.Id.ToString(),
-    //         account.Email,
-    //         account.Password);
-    // }
-    //
-    // [HttpPOST("accounts/saveAccount")]
-    // public string saveAccount(string email, string password)
-    // {
-    //     var res = _accountDao.Insert(new Account() { Email = email, Password = password });
-    //     if (res == 0)
-    //     {
-    //         Console.WriteLine("Error while saving data");
-    //         return "Error while saving data";
-    //     }
-    //
-    //     Console.WriteLine("Data saved successfully");
-    //     return "Data saved successfully";
-    // }
-    //
-    // [HttpPOST("accounts/login")]
-    // public (bool, int?) login(string login, string password, string remember)
-    // {
-    //     return _accountDao.VerifyLoginAndPassword(login, password);
-    // }
+    [HttpGET("events/openEvent")]
+    public string openEvent(string path, int userId, int eventId)
+    {
+        var singleEvent = _eventDao.GetById(eventId);
+        var comments = _commentDao.GetAllByEventId(eventId);
+        if (singleEvent is null) return "Event not found";
+        path = "./site/single-event.html";
+        return CreateHtmlCode(path, new { Event = singleEvent, Comments = comments, Id = userId });
+    }
+
+    [HttpGET("events/deleteComment")]
+    public string deleteComment(string path, int userId, int eventId, int commentId)
+    {
+        _commentDao.Delete(commentId);
+        return openEvent("./site/single-event.html", userId, eventId);
+    }
+
+    [HttpPOST("events/saveComment")]
+    public string saveComment(int userId, int eventId, string text)
+    {
+        var account = _accountDao.GetById(userId);
+
+        var res = _commentDao.Insert(new() { UserId = userId, Email = account.Email, EventId = eventId, Text = text });
+        if (res == 0)
+        {
+            return "Error while saving data";
+        }
+
+        return openEvent("./site/single-event.html", userId, eventId);
+    }
+
+    [HttpPOST("events/saveCommentUpdates")]
+    public string saveCommentUpdates(int userId, int eventId, int commentId, string text)
+    {
+        var comment = _commentDao.GetById(commentId);
+        comment.Text = text;
+        var res = _commentDao.Update(comment);
+        if (res == 0)
+        {
+            return "Error while saving data";
+        }
+
+        return openEvent("./site/single-event.html", userId, eventId);
+    }
 }

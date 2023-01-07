@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400,400italic,600");
 @import url("fontawesome-all.min.css");
 @font-face {
@@ -2733,12 +2734,6 @@ p {
   font-weight: normal;
   font-style: normal;
 }
-/* =======================================================
-*
-* 	Template Style 
-*	Edit this section
-*
-* ======================================================= */
 html, body {
   overflow-x: hidden;
 }
@@ -2759,10 +2754,6 @@ h1, h2, h3, h4, h5, h6, figure {
   margin: 0 0 30px 0;
 }
 
-::-webkit-selection {
-  background: #f0f4f4;
-}
-
 ::-moz-selection {
   background: #f0f4f4;
 }
@@ -2778,7 +2769,6 @@ h1, h2, h3, h4, h5, h6, figure {
 
 #fh5co-aside {
   position: fixed;
-  left: 0;
   bottom: 0;
   top: 0;
   left: -50%;
@@ -3119,7 +3109,6 @@ h1, h2, h3, h4, h5, h6, figure {
   padding: 5rem;
 }
 
-/* Works - Horizontal Gallery */
 @font-face {
   font-family: "icomoon";
   src: url("../fonts/icomoon/icomoon.eot?6l7lgr");
@@ -3141,7 +3130,6 @@ h1, h2, h3, h4, h5, h6, figure {
 .swiper-slide {
   text-align: center;
   font-size: 18px;
-  /* Center slide text vertically */
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -3154,6 +3142,11 @@ h1, h2, h3, h4, h5, h6, figure {
   -ms-flex-align: center;
   -webkit-align-items: center;
   align-items: center;
+}
+.swiper-slide .img-fluid {
+  width: 750px;
+  height: 700px;
+  object-fit: cover;
 }
 
 :root {
@@ -3220,8 +3213,104 @@ h1, h2, h3, h4, h5, h6, figure {
 .event_sum .col2 p {
   margin-bottom: 0.7em;
   line-height: normal;
-  -epub-hyphens: auto;
   font-size: 0.95em;
+}
+
+.single-event h1 {
+  padding: 15px 0;
+  margin: 0;
+  font-size: 2em;
+}
+
+.event-description {
+  padding: 2em 1em 0 1em;
+}
+
+.comments_container {
+  padding: 2em 1em;
+  width: 60%;
+}
+@media (max-width: 1000px) {
+  .comments_container {
+    width: 100%;
+  }
+}
+.comments_container label {
+  margin: 10px 0;
+}
+.comments_container input {
+  margin: 0;
+}
+.comments_container h3 {
+  margin: 0;
+}
+.comments_container .disabled {
+  background: darkgray;
+}
+.comments_container .div-disabled button:hover {
+  color: #fff;
+}
+
+[data-tooltip] {
+  position: relative; /* Относительное позиционирование */
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip); /* Выводим текст */
+  position: absolute; /* Абсолютное позиционирование */
+  width: 300px; /* Ширина подсказки */
+  left: 0;
+  top: 0; /* Положение подсказки */
+  background: rgba(52, 52, 52, 0.2);
+  color: #fff; /* Цвет текста */
+  padding: 0.5em; /* Поля вокруг текста */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Параметры тени */
+  pointer-events: none; /* Подсказка */
+  opacity: 0; /* Подсказка невидима */
+  transition: 1s; /* Время появления подсказки */
+}
+
+[data-tooltip]:hover::after {
+  opacity: 1; /* Показываем подсказку */
+  top: 2em; /* Положение подсказки */
+}
+
+.comment {
+  padding: 1em;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.13);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+  margin-top: 1em;
+  margin-bottom: 2em;
+}
+.comment .com_tools {
+  position: absolute;
+  top: 2px;
+  right: 5px;
+}
+
+.comment_textarea {
+  margin-bottom: 0;
+}
+
+.com_button {
+  margin-bottom: 2em;
+}
+
+.comment-edit-form {
+  display: none;
+}
+
+.error_span span {
+  line-height: 1em;
+  color: red;
+  font-size: 0.8em;
+}
+.error_span label {
+  margin-top: 0;
 }
 
 @font-face {
@@ -3264,6 +3353,7 @@ body {
   box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
   padding: 50px 35px;
   margin-bottom: 5rem;
+  min-height: 2em;
 }
 
 .sign-up-form, .login-form * {
@@ -3332,7 +3422,7 @@ a {
 }
 
 .login-register {
-  min-height: 920px;
+  min-height: 1020px;
   min-width: 400px;
   position: relative;
   perspective: 1000px;
@@ -3349,7 +3439,7 @@ a {
 }
 
 .sign-up-form {
-  height: 820px;
+  height: 920px;
 }
 
 .login-register .login-form,
@@ -3556,7 +3646,7 @@ a {
   transition: background-color 0.35s ease-in-out, border-color 0.35s ease-in-out;
 }
 
-.user-profile-form .hidden-id {
+.hidden-id {
   display: none;
 }
 

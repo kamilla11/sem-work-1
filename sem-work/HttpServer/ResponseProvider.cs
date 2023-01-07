@@ -1,7 +1,7 @@
 using System.Net;
 using System.Reflection;
 using System.Text;
-using System.Text.Json;
+using System.Web;
 using HttpServer.Attributes;
 using HttpServer.Controllers;
 using HttpServer.MyORM;
@@ -12,19 +12,21 @@ public class ResponseProvider
 {
     private HttpListenerContext _listenerContext;
     private static string _connectionStr = "Server=localhost;Database=museum;Port=5432;SSLMode=Prefer";
+
     private SessionManager _sessionManager;
-    //private AccountDAO _accountDao;
+    
     private ServerSettings _serverSettings;
 
-    public ResponseProvider(ServerSettings serverSettings, HttpListenerContext listenerContext)
+    public ResponseProvider(ServerSettings serverSettings, HttpListenerContext listenerContext,
+        SessionManager sessionManager)
     {
         _listenerContext = listenerContext;
-        _sessionManager = SessionManager.Instance;
-       
+        _sessionManager = sessionManager;
+
         _serverSettings = serverSettings;
     }
 
-    public bool FilesHandler( out byte[] buffer)
+    public bool FilesHandler(out byte[] buffer)
     {
         buffer = null;
         if (Directory.Exists(_serverSettings.Path))
@@ -35,7 +37,7 @@ public class ResponseProvider
         if (buffer is null) return false;
         return true;
     }
-    
+
 
     private byte[] LoadFile(string path)
     {
@@ -81,34 +83,25 @@ public class ResponseProvider
         // объект ответа
         HttpListenerResponse response = _listenerContext.Response;
         
-        // if (request.Url.Segments.Length < 1) FilesHandler(out buffer);
-        //
-        // if (request.Url.Segments.Length < 2) return false;
 
         if (request.Url.Segments.Length < 2)
         {
             FilesHandler(out buffer);
             return true;
         }
-        
+
         string controllerName = request.Url.Segments[1].Replace("/", "");
-        
+
         string methodName;
         if (request.Url.Segments.Length < 3)
         {
-             methodName = controllerName;
+            methodName = controllerName;
         }
         else
         {
-             methodName = request.Url.Segments[2].Replace("/", "");
+            methodName = request.Url.Segments[2].Replace("/", "");
         }
-      
 
-        // if (String.IsNullOrEmpty(methodName))
-        // {
-        //   
-        // }
-        
         string[] strParams = { };
         object[] queryParams = { };
 
@@ -117,103 +110,99 @@ public class ResponseProvider
 
         MethodInfo method;
         if (!TryGetMethod(out method, controller, methodName, out queryParams, controllerName)) return false;
-        
 
-        if (request.Url.Segments.Length > 3 && _listenerContext.Request.HttpMethod == HttpMethod.Get.ToString() && queryParams.Length == 1)
+        var cookie = request.Cookies["SessionId"];
+        var isCookieAndSessionExist =
+            cookie is not null && _sessionManager.IsSessionExist(Guid.Parse(cookie.Value));
+        if (isCookieAndSessionExist)
+        {
+            var session = _sessionManager.GetSessionInfo(Guid.Parse(cookie!.Value));
+            queryParams = queryParams.Concat(new string[] { session!.AccountId.ToString() }).ToArray();
+        }
+        else
+        {
+            queryParams = queryParams.Concat(new string[] { "-1" }).ToArray();
+        }
+
+        if (request.Url.Segments.Length > 3 && _listenerContext.Request.HttpMethod == HttpMethod.Get.ToString() &&
+            queryParams.Length == 2)
         {
             strParams = request.Url
                 .Segments
                 .Skip(3)
                 .Select(s => s.Replace("/", ""))
                 .ToArray();
-            strParams = queryParams.Concat(strParams).Select(x=>x.ToString()).ToArray();
 
-            queryParams = method.GetParameters()
-                .Select((p, i) => Convert.ChangeType(strParams[i], p.ParameterType))
-                .ToArray();
+
+            queryParams = queryParams.Concat(strParams).Select(x => x.ToString()).ToArray();
         }
 
-        switch (method.Name)
+        queryParams = method.GetParameters()
+            .Select((p, i) => Convert.ChangeType(queryParams[i], p.ParameterType))
+            .ToArray();
+
+        if (methodName == "quite")
         {
-            case "getAccounts":
-            {
-                var cookie = request.Cookies["SessionId"];
-                var isCookieAndSessionExist =
-                    cookie is not null && _sessionManager.IsSessionExist(Guid.Parse(cookie.Value));
-                if (!isCookieAndSessionExist)
-                {
-                    response.StatusCode = 401;
-                    response.ContentType = "text/plain";
-                    buffer = Encoding.ASCII.GetBytes("User is not authorized");
-                    response.ContentLength64 = buffer.Length;
-                    return true;
-                }
-
-                break;
-            }
-            case "getAccountInfo":
-            {
-                if (queryParams.Length != 1) return false;
-                var cookie = request.Cookies["SessionId"];
-                var isCookieAndSessionExist =
-                    cookie is not null && _sessionManager.IsSessionExist(Guid.Parse(cookie.Value));
-                if (!isCookieAndSessionExist)
-                {
-                    response.StatusCode = 401;
-                    response.ContentType = "text/plain";
-                    buffer = Encoding.ASCII.GetBytes("User is not authorized");
-                    response.ContentLength64 = buffer.Length;
-                    return true;
-                }
-
-                break;
-            }
-
-            case "getAccountById":
-            {
-                if (queryParams.Length != 1) return false;
-                break;
-            }
-            
+            var cook = new Cookie("SessionId", Guid.Parse(cookie!.Value).ToString());
+            cook.Expires = DateTime.Now.AddDays(-1d);
+            cook.Path = "/";
+            response.Cookies.Add(cook);
+            _sessionManager.DeleteSession(Guid.Parse(cookie!.Value));
+            response.Redirect("/main");
         }
 
         var ret = method.Invoke(Activator.CreateInstance(controller), queryParams);
-
-       // response.ContentType = "Application/json";
-       response.ContentType = "text/html";
-       buffer = Encoding.UTF8.GetBytes(ret.ToString());
-        //buffer = Encoding.ASCII.GetBytes(JsonSerializer.Serialize(ret));
+        
+        response.ContentType = "text/html";
+        buffer = Encoding.UTF8.GetBytes(ret.ToString());
 
         switch (method.Name)
         {
-            // case "saveAccount":
-            // {
-            //     response.Redirect("https://store.steampowered.com/login/");
-            //
-            //     break;
-            // }
-
-            case "login":
+            case "saveAccount":
             {
-                var res = ((bool, int?))ret;
+                var res = ((bool, Account, string))ret;
+                var acc = res.Item2;
                 if (res.Item1)
                 {
-                    AccountDAO accountDao = new(_connectionStr);
-                    var account = accountDao.GetById(res.Item2.Value);
-                    var guid = _sessionManager.CreateSession(res.Item2!.Value,
-                        account.Email, DateTime.Now);
-                    response.SetCookie(new Cookie("SessionId", guid.ToString()));
-                    var path = "./site/profil.html";
-                    buffer = Encoding.UTF8.GetBytes(Controller.CreateHtmlCode(path, new{Account = account, Show = true}));
-                    // buffer = Encoding.UTF8.GetBytes(
-                    //     JsonSerializer.Serialize(new AccountDAO(_connectionStr).GetById(res.Item2.Value)));
-                    // response.ContentType = "Application/json";
+                    var guid = _sessionManager.CreateSession(acc.Id,
+                        acc.Email, DateTime.Now);
+                    var cook = new Cookie("SessionId", guid.ToString());
+                    cook.Expires = DateTime.Now.AddDays(1);
+                    cook.Path = "/";
+                    response.Cookies.Add(cook);
+                    buffer = Encoding.UTF8.GetBytes(res.Item3);
                 }
                 else
                 {
-                    response.ContentType = "text/plain";
-                    buffer = Encoding.UTF8.GetBytes("User not found");
-                   // return false;
+                    buffer = Encoding.UTF8.GetBytes(res.Item3);
+                }
+                
+                break;
+            }
+
+            case "login":
+            {
+                var res = ((bool, int?, bool))ret;
+                if (res.Item1)
+                {
+                    AccountDAO accountDao = new(_connectionStr);
+                    var userId = res.Item2!.Value;
+                    var account = accountDao.GetById(userId);
+                    var guid = _sessionManager.CreateSession(userId,
+                        account.Email, DateTime.Now);
+                    var cook = new Cookie("SessionId", guid.ToString());
+                    cook.Expires = (res.Item3) ? DateTime.Now.AddYears(1) : DateTime.Now.AddDays(1);
+                    cook.Path = "/";
+                    response.Cookies.Add(cook);
+                    var path = "./site/profil.html";
+                    buffer = Encoding.UTF8.GetBytes(Controller.CreateHtmlCode(path,
+                        new { Account = account, Show = true }));
+                }
+                else
+                {
+                    var path = "./site/login.html";
+                    buffer = Encoding.UTF8.GetBytes(Controller.CreateHtmlCode(path,
+                        new{IsUserExist = false, IsEmailCorrect = true, IsPasswordCorrect= true, IsNameCorrect= true, IsSurnameCorrect= true}));
                 }
 
                 break;
@@ -237,7 +226,8 @@ public class ResponseProvider
         return true;
     }
 
-    public bool TryGetMethod(out MethodInfo method, Type controller, string methodName, out object[] queryParams, string controllerName)
+    public bool TryGetMethod(out MethodInfo method, Type controller, string methodName, out object[] queryParams,
+        string controllerName)
     {
         var methodType = $"Http{_listenerContext.Request.HttpMethod}";
         queryParams = new object[] { };
@@ -249,10 +239,10 @@ public class ResponseProvider
                                          (((HttpGET)c.GetCustomAttribute(typeof(HttpGET))).MethodURI ==
                                           methodName.ToLower() ||
                                           c.Name.ToLower() == methodName.ToLower()));
-                string path ="";
-                if(methodName == "main") path = _serverSettings.Path +"/index.html";
-                else path = _serverSettings.Path +"/"+ controllerName.ToLower() + ".html";
-                queryParams = new[] {path};
+                string path = "";
+                if (methodName == "main") path = _serverSettings.Path + "/index.html";
+                else path = _serverSettings.Path + "/" + controllerName.ToLower() + ".html";
+                queryParams = new[] { path };
                 break;
             case "HttpPOST":
                 method = controller.GetMethods()
@@ -260,7 +250,6 @@ public class ResponseProvider
                                          (((HttpPOST)c.GetCustomAttribute(typeof(HttpPOST))).MethodURI ==
                                           methodName.ToLower() ||
                                           c.Name.ToLower() == methodName.ToLower()));
-                //queryParams = new[] { GetPostData(_listenerContext.Request) };
                 queryParams = GetParamsPostData(_listenerContext.Request);
                 break;
             default:
@@ -282,31 +271,15 @@ public class ResponseProvider
 
         using (Stream body = request.InputStream)
         {
-            using (var reader = new StreamReader(body, request.ContentEncoding))
+            using (var reader = new StreamReader(body, Encoding.UTF8))
             {
                 var query = reader.ReadToEnd();
                 var queryParams = query.Split('&')
-                    .SelectMany(pair => pair.Split('='))
-                    .Where(((s, i) => i % 2 == 1))
+                    .Select(pair => pair.Split('='))
+                    .Select(pair => HttpUtility.UrlDecode(pair[1]))
                     .ToArray();
                 return queryParams;
             }
         }
     }
-
-    // private static string GetPostData(HttpListenerRequest request)
-    // {
-    //     if (!request.HasEntityBody)
-    //     {
-    //         return null;
-    //     }
-    //
-    //     using (Stream body = request.InputStream)
-    //     {
-    //         using (var reader = new StreamReader(body, request.ContentEncoding))
-    //         {
-    //             return reader.ReadToEnd();
-    //         }
-    //     }
-    // }
 }

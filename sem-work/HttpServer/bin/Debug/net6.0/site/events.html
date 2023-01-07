@@ -1,9 +1,4 @@
 <!DOCTYPE HTML>
-<!--
-	Helios by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
 <head>
     <title>Эрмитаж</title>
@@ -51,7 +46,6 @@
 
     </div>
 
-    <!-- Works -->
     <div class="container-fluid works wow fadeInDown">
 
         <div class=" row justify-content-center">
@@ -66,20 +60,15 @@
         </div>
 
     </div>
-    <!-- End Works -->
+
     <!-- Swiper -->
     <div class="swiper-container">
         <div class="swiper-wrapper">
-<!--            750x1125-->
-<!--            <div class="swiper-slide"><img class="img-fluid" src="/assets/images/gallery/photo-1.jpg" alt="Photo"></div>-->
-<!--            <div class="swiper-slide"><img class="img-fluid" src="/assets/images/gallery/photo-2.jpg" alt="Photo"></div>-->
-<!--            <div class="swiper-slide"><img class="img-fluid" src="/assets/images/gallery/photo-3.jpg" alt="Photo"></div>-->
-<!--            <div class="swiper-slide"><img class="img-fluid" src="/assets/images/gallery/photo-4.jpg" alt="Photo"></div>-->
+            <!--            750x1125-->
             <div class="swiper-slide"><img class="img-fluid" src="/assets/images/gallery/photo-5.jpg" alt="Photo"></div>
             <div class="swiper-slide"><img class="img-fluid" src="/assets/images/gallery/photo-6.jpg" alt="Photo"></div>
-<!--            <div class="swiper-slide"><img class="img-fluid" src="/assets/images/gallery/photo-7.jpg" alt="Photo"></div>-->
-<!--            <div class="swiper-slide"><img class="img-fluid" src="/assets/images/gallery/photo-8.jpg" alt="Photo"></div>-->
-            <div class="swiper-slide"><img class="img-fluid" src="/assets/images/gallery/photo-9.jpg" alt="Photo"></div>
+            <div class="swiper-slide"><img class="img-fluid" src="/assets/images/gallery/photo-5.jpg" alt="Photo"></div>
+            <div class="swiper-slide"><img class="img-fluid" src="/assets/images/gallery/photo-6.jpg" alt="Photo"></div>
         </div>
         <!-- Add Pagination -->
         <div class="swiper-pagination"></div>
@@ -89,9 +78,12 @@
     </div>
     <div class="events-container">
         {{for event in events}}
+
         <div class="event">
             <div class="event_title">
-                <h3>{{event.name}}</h3>
+                <a href="/events/openEvent/{{event.id}}">
+                    <h3>{{event.name}}</h3>
+                </a>
             </div>
             <div class="event_sum">
                 <div class="col1">
@@ -106,68 +98,11 @@
 
             </div>
         </div>
+
         {{end}}
-        <!--        <div class="event">-->
-        <!--            <div class="event_title">-->
-        <!--                <h3>Крутое название</h3>-->
-        <!--            </div>-->
-        <!--            <div class="event_sum">-->
-        <!--                <div class="col1">-->
-        <!--                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium adipisci cumque dolor,-->
-        <!--                        doloremque eaque eveniet numquam provident quas quos rem, repellat saepe similique vel vero-->
-        <!--                        voluptates. Nulla quasi repellendus velit!</p>-->
-        <!--                </div>-->
-        <!--                <div class="col2">-->
-        <!--                    <p>Спикер:</p>-->
-        <!--                    <p>Дата:</p>-->
-        <!--                    <p>Место:</p>-->
-        <!--                    <p>Билет: 150 руб</p>-->
-        <!--                </div>-->
-
-        <!--            </div>-->
-        <!--        </div>-->
-        <!--        <div class="event">-->
-        <!--            <div class="event_title">-->
-        <!--                <h3>Крутое название</h3>-->
-        <!--            </div>-->
-        <!--            <div class="event_sum">-->
-        <!--                <div class="col1">-->
-        <!--                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium adipisci cumque dolor,-->
-        <!--                        doloremque eaque eveniet numquam provident quas quos rem, repellat saepe similique vel vero-->
-        <!--                        voluptates. Nulla quasi repellendus velit!</p>-->
-        <!--                </div>-->
-        <!--                <div class="col2">-->
-        <!--                    <p>Спикер:</p>-->
-        <!--                    <p>Дата:</p>-->
-        <!--                    <p>Место:</p>-->
-        <!--                    <p>Билет: 150 руб</p>-->
-        <!--                </div>-->
-
-        <!--            </div>-->
-        <!--        </div>-->
-        <!--        <div class="event">-->
-        <!--            <div class="event_title">-->
-        <!--                <h3>Крутое название</h3>-->
-        <!--            </div>-->
-        <!--            <div class="event_sum">-->
-        <!--                <div class="col1">-->
-        <!--                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium adipisci cumque dolor,-->
-        <!--                        doloremque eaque eveniet numquam provident quas quos rem, repellat saepe similique vel vero-->
-        <!--                        voluptates. Nulla quasi repellendus velit!</p>-->
-        <!--                </div>-->
-        <!--                <div class="col2">-->
-        <!--                    <p>Спикер:</p>-->
-        <!--                    <p>Дата:</p>-->
-        <!--                    <p>Место:</p>-->
-        <!--                    <p>Билет: 150 руб</p>-->
-        <!--                </div>-->
-
-        <!--            </div>-->
-        <!--        </div>-->
 
     </div>
-    <!-- End Footer -->
-    <!-- Footer -->
+   
     <div id="footer">
         <div class="container">
             <div class="col-12">
@@ -175,15 +110,15 @@
                 <!-- Contact -->
                 <section class="footer-contact">
                     <header>
-                        <h3>Надеюсь, вам понравилась моя работа</h3>
+                        <h3>Семестровая работа Гафаровой Камиллы, группа 11-106</h3>
                     </header>
-                    <p class="text-center">Семестровая работа Гафаровой Камиллы, группа 11-106</p>
                     <ul class="icons">
                         <li><a href="https://vk.com/id120630797" class="icon brands fa-vk"><span class="label">Vk</span></a>
                         </li>
                         <li><a href="https://t.me/kama_llama" class="icon brands fa-telegram"><span class="label">Telegram</span></a>
                         </li>
-                        <li><a href="https://github.com/kamilla11/sem-work-1" class="icon brands fa-github"><span class="label">GitHub</span></a>
+                        <li><a href="https://github.com/kamilla11/sem-work-1" class="icon brands fa-github"><span
+                                class="label">GitHub</span></a>
                         </li>
                     </ul>
                 </section>

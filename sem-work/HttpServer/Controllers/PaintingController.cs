@@ -23,7 +23,7 @@ public class PaintingController : Controller
     // }
     
     [HttpGET("paintings/getPainting")]
-    public string getPainting(string path, int id)
+    public string getPainting(string path, int userId, int id)
     {
         path = "./site/single.html";
         ExpositionDAO expositionDao = new(_connectionStr);

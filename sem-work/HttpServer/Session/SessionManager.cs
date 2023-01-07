@@ -4,8 +4,10 @@ namespace HttpServer;
 
 public class SessionManager
 {
+    private MemoryCache _cache;
     private SessionManager()
     {
+        _cache = new(new MemoryCacheOptions());
     }
 
     private static readonly Lazy<SessionManager> Lazy =
@@ -13,7 +15,7 @@ public class SessionManager
 
     public static SessionManager Instance => Lazy.Value;
 
-    private MemoryCache _cache = new(new MemoryCacheOptions());
+    
 
     public Guid CreateSession(int accountId, string login, DateTime createDateTime)
     {
@@ -21,7 +23,7 @@ public class SessionManager
         var session = new Session(guid, accountId, login, createDateTime);
         var cacheEntryOptions = new MemoryCacheEntryOptions()
             // Храним в кэше в течении этого времени, сбрасываем время при обращении.
-            .SetSlidingExpiration(TimeSpan.FromSeconds(120));
+            .SetSlidingExpiration(TimeSpan.FromDays(1));
 
         // Сохраняем данные в кэше.
         _cache.Set(guid, session, cacheEntryOptions);
@@ -38,5 +40,10 @@ public class SessionManager
     {
         _cache.TryGetValue(key, out Session? session);
         return session;
+    }
+    
+    public void DeleteSession(object key)
+    {
+        _cache.Remove(key);
     }
 }

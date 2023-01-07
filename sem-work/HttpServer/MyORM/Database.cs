@@ -1,5 +1,4 @@
 using System.Data;
-using System.Data.SqlClient;
 using System.Text;
 using Npgsql;
 
@@ -7,6 +6,7 @@ namespace HttpServer.MyORM;
 
 public class Database
 {
+    //method to check database correct working
     public static void Check()
     {
         string _connectionStr = "Server=localhost;Database=museum;Port=5432;SSLMode=Prefer";
@@ -14,52 +14,22 @@ public class Database
 
         //new Database(_connectionStr).Delete(new Account { Id = 2, Login = "hihihi", Password = "hahaha" });
 
+        //new Database(_connectionStr).Update(new Account {Id = 2, Email = "kamamama", Password = "kama", Name = "kama", Surname = "kama", Gender = "Небинарная личность"});
+        
         //new Database(_connectionStr).Delete<Account>(6);
 
         //new Database(_connectionStr).Insert(new Account { Login = "hihihi", Password = "hahaha" });
 
-        var result = new Database(_connectionStr).Select<Account>();
-
-        //var result = new Database(str) 
-
-        //function
-
-        // .ExecuteQuery<Account>("call getAccounts()");
-
-
-        //.ExecuteScalar<Int64>("select count(*) from public.\"accounts\"");
-
-        //delete
-
-        //.AddParameter("@id", 1)
-        //.ExecuteNonQuery("delete from public.\"accounts\" where id=@id");
-
-        //update
-
-        //.AddParameter("@id", 4)
-        //.AddParameter("@login", "hohoho")
-        //.ExecuteNonQuery("update public.\"accounts\" set login=@login where id=@id");
-
-        //insert
-
-        //.AddParameter("@login", "Lama")
-        //.AddParameter("@password", "54321")
-        //.ExecuteNonQuery("insert into public.\"accounts\" (login, password) values(@login, @password)");
-
-        //select
-
-        //.ExecuteQuery<Account>("select * from public.\"accounts\"");
-
-        foreach (var r in result)
-        {
-            Console.WriteLine(r);
-        }
-
-        // Console.WriteLine(result);
+        //var result = new Database(_connectionStr).Select<Account>();
+        
+        // foreach (var r in result)
+        // {
+        //     Console.WriteLine(r);
+        // }
     }
 
-    public IDbConnection _connection = null;
-    public IDbCommand _cmd = null;
+    private readonly IDbConnection _connection;
+    private readonly IDbCommand _cmd;
 
     public Database(string connectionString)
     {
@@ -90,7 +60,7 @@ public class Database
             if (name != "id")
             {
                 nameList.Add(name);
-                this.AddParameter("@" + name, p.GetValue(obj));
+                AddParameter("@" + name, p.GetValue(obj));
             }
         });
 
@@ -131,13 +101,14 @@ public class Database
     public int Delete<T>(T obj)
     {
         var t = typeof(T);
-        var tableName = t.Name.ToLower() + "s";
+        var tableName = t.Name.ToLower();
         var properties = t.GetProperties();
-        var values = string.Join(" and ", properties.Skip(1).Select(p =>
+        var values = string.Join(" and ", properties.Select(p =>
         {
             var val = p.GetValue(obj);
-            if (val is string) return p.Name.ToLower() + " = '" + p.GetValue(obj) + "'";
-            return p.Name.ToLower() + "=" + p.GetValue(obj);
+            var name = p.Name.ToLower();
+            AddParameter("@" + name, val);
+            return name + "=@" + name;
         }));
         var query = $"delete from public.\"{tableName}\" where {values}";
         return ExecuteNonQuery(query);
@@ -146,8 +117,9 @@ public class Database
     public int Delete<T>(int id)
     {
         var t = typeof(T);
-        var tableName = t.Name.ToLower() + "s";
-        return ExecuteNonQuery($"delete from public.\"{tableName}\" where id={id}");
+        var tableName = t.Name.ToLower();
+        AddParameter("@id", id);
+        return ExecuteNonQuery($"delete from public.\"{tableName}\" where id=@id");
     }
 
     public int Update<T>(T obj)
@@ -155,13 +127,15 @@ public class Database
         var t = typeof(T);
         var tableName = t.Name.ToLower();
         var properties = t.GetProperties();
-        var values = string.Join(", ", properties.Skip(1).Select(p =>
+        var values = string.Join(", ", properties.Take(properties.Length-1).Select(p =>
         {
             var val = p.GetValue(obj);
-            if (val is string) return p.Name.ToLower() + " = '" + p.GetValue(obj) + "'";
-            return p.Name.ToLower() + "=" + p.GetValue(obj);
+            var name = p.Name.ToLower();
+            AddParameter("@" + name, val);
+                return name + "=@" + name;
         }));
-        return ExecuteNonQuery($"update public.\"{tableName}\" set {values} where id= {properties[0].GetValue(obj)}");
+        AddParameter("@id", properties.Last().GetValue(obj));
+        return ExecuteNonQuery($"update public.\"{tableName}\" set {values} where id=@id");
     }
 
     public Database AddParameter<T>(string name, T value)
@@ -197,22 +171,11 @@ public class Database
             var reader = _cmd.ExecuteReader();
             while (reader.Read())
             {
-                T obj = (T)Activator.CreateInstance(t);
+                var obj = (T)Activator.CreateInstance(t);
                 t.GetProperties().ToList().ForEach(p =>
                 {
                     var val = reader[p.Name.ToLower()];
-                    // if (p.PropertyType is Int32)
-                    // {
-                    //     int.TryParse(val.ToString(), out var number);
-                    //     p.SetValue(obj, number);
-                    // }
-                    // else if (p.PropertyType is Double && val.GetType() is decimal)
-                    // {
-                    //     double.TryParse(val.ToString(), out var number);
-                    //     p.SetValue(obj, number);
-                    // }
-                    // else
-                        p.SetValue(obj, val);
+                    p.SetValue(obj, val);
                 });
                 list.Add(obj);
             }
@@ -223,7 +186,7 @@ public class Database
 
     public T ExecuteScalar<T>(string query)
     {
-        T result = default(T);
+        var result = default(T);
         using (_connection)
         {
             _cmd.CommandText = query;

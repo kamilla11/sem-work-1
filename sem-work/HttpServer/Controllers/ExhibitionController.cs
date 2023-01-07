@@ -11,7 +11,7 @@ public class ExhibitionController: Controller
     private static ExhibitionDAO _exhibitionDao = new(_connectionStr);
     
     [HttpGET("exhibitions")]
-    public string exhibitions(string path)
+    public string exhibitions(string path, int userId)
     {
         var exhibitions = _exhibitionDao.GetAll();
         if (exhibitions is null) return "exhibitions not found";

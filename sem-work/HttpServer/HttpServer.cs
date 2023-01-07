@@ -11,12 +11,15 @@ namespace HttpServer
         private readonly HttpListener _httpListener;
         private ServerSettings _serverSettings;
         private DBSettings _dbSettings;
+        private readonly SessionManager _sessionManager = SessionManager.Instance;
 
         public HttpServer()
         {
             _httpListener = new HttpListener();
             _dbSettings = new DBSettings();
+            _sessionManager = SessionManager.Instance;
         }
+        
 
         public void Start()
         {
@@ -69,7 +72,8 @@ namespace HttpServer
                 HttpListenerResponse response = _httpContext.Response;
 
                 byte[] buffer;
-                var responseProvider = new ResponseProvider( _serverSettings, _httpContext);
+                
+                var responseProvider = new ResponseProvider( _serverSettings, _httpContext, _sessionManager);
 
                 try
                 {

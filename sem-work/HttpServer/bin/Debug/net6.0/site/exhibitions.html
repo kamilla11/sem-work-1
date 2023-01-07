@@ -1,9 +1,4 @@
 <!DOCTYPE HTML>
-<!--
-	Helios by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
 <head>
     <title>Эрмитаж</title>
@@ -50,7 +45,6 @@
 
     </div>
 
-    <!-- Studio -->
     <div class="container studio">
         <div class="row justify-content-center">
             <div class="col-md-8 col-sm-12 wow fadeInDown">
@@ -64,30 +58,14 @@
     <div class="container exhibition">
         {{for exhibition in exhibitions}}
         <div class="exhibition_one text-left">
-                <img class="img-fluid" src="{{exhibition.img_path}}" alt="Photo">
-                <p>{{exhibition.start_date}} - {{exhibition.end_date}}</p>
-                <p>{{exhibition.place}}</p>
-                <h3>{{exhibition.name}}</h3>
-                <p>{{exhibition.description}}</p>
+            <img class="img-fluid" src="{{exhibition.img_path}}" alt="Photo">
+            <p>{{exhibition.start_date}} - {{exhibition.end_date}}</p>
+            <p>{{exhibition.place}}</p>
+            <h3>{{exhibition.name}}</h3>
+            <p>{{exhibition.description}}</p>
         </div>
         {{end}}
-<!--        <div class="exhibition_one">-->
-<!--                <img class="img-fluid" src="/assets/images/photo-2.jpg" alt="Photo">-->
-<!--                <p>Exhibition</p>-->
-<!--                <p>Artist</p>-->
-<!--        </div>-->
-<!--        <div class="exhibition_one">-->
-<!--                <img class="img-fluid" src="/assets/images/photo-2.jpg" alt="Photo">-->
-<!--                <p>Exhibition</p>-->
-<!--                <p>Artist</p>-->
-<!--        </div>-->
-<!--        <div class="exhibition_one">-->
-<!--                <img class="img-fluid" src="/assets/images/photo-2.jpg" alt="Photo">-->
-<!--                <p>Exhibition</p>-->
-<!--                <p>Artist</p>-->
-<!--        </div>-->
     </div>
-    <!-- End Studio -->
 
     <!-- Footer -->
     <div id="footer">
@@ -97,15 +75,15 @@
                 <!-- Contact -->
                 <section class="footer-contact">
                     <header>
-                        <h3>Надеюсь, вам понравилась моя работа</h3>
+                        <h3>Семестровая работа Гафаровой Камиллы, группа 11-106</h3>
                     </header>
-                    <p class="text-center">Семестровая работа Гафаровой Камиллы, группа 11-106</p>
                     <ul class="icons">
                         <li><a href="https://vk.com/id120630797" class="icon brands fa-vk"><span class="label">Vk</span></a>
                         </li>
                         <li><a href="https://t.me/kama_llama" class="icon brands fa-telegram"><span class="label">Telegram</span></a>
                         </li>
-                        <li><a href="https://github.com/kamilla11/sem-work-1" class="icon brands fa-github"><span class="label">GitHub</span></a>
+                        <li><a href="https://github.com/kamilla11/sem-work-1" class="icon brands fa-github"><span
+                                class="label">GitHub</span></a>
                         </li>
                     </ul>
                 </section>

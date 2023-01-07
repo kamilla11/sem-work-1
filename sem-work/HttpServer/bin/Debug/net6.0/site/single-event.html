@@ -1,10 +1,185 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Эрмитаж</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <!-- Styles -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/assets/css/animate.css" rel="stylesheet" type="text/css"/>
+    <link href="/assets/css/swiper.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/assets/css/main.css" rel="stylesheet" type="text/css"/>
+    <link rel="icon" href="/assets/images/icon.png"/>
+    <noscript>
+        <link rel="stylesheet" href="/assets/css/noscript.css"/>
+    </noscript>
 </head>
-<body>
+<body class="no-sidebar">
+<div id="page-wrapper">
 
+    <!-- Header -->
+    <div id="header">
+
+        <!-- Inner -->
+        <div class="inner">
+            <header>
+                <h1 id="logo">Мероприятия</h1>
+            </header>
+        </div>
+
+
+        <!-- Nav -->
+        <nav id="nav">
+            <ul>
+                <li><a href="/main">Главная</a></li>
+                <li>
+                    <a href="#">События</a>
+                    <ul>
+                        <li><a href="/exhibitions">Выставки</a></li>
+                        <li><a href="/events">Мероприятия</a></li>
+                    </ul>
+                </li>
+                <li><a href="/expositions">Экспозиции</a></li>
+                <li><a href="/accounts">Профиль</a></li>
+            </ul>
+        </nav>
+
+    </div>
+
+    <div class="container-fluid works wow fadeInDown">
+
+        <div class=" row justify-content-center">
+
+            <div class="single-event col-xl-6 col-md-8 col-sm-12">
+                <hr/>
+                <h1 class="text-center pt-3 pb-3">
+                    {{event.name}}
+                </h1>
+                <hr/>
+            </div>
+        </div>
+
+        <div class="event-description">
+            <div>
+                {{event.description}}
+            </div>
+
+            <div>
+                <p><strong>Спикер</strong>: {{event.speaker}}</p>
+                <p><strong>Дата</strong>: {{event.date}}</p>
+                <p><strong>Место</strong>: {{event.place}}</p>
+                <p><strong>Билет</strong>: {{event.price}} руб</p>
+            </div>
+        </div>
+
+        <div class="comments_container">
+            <div>
+                <h3>Хочешь оставить отзыв?</h3>
+                <form action="/events/saveComment" method="post">
+                    <div class="hidden-id">
+                        <label for="userId">Id</label>
+                        <input type="text" value="{{id}}" id="userId" name="userId" readonly>
+                        <label for="eventId">Id</label>
+                        <input type="text" value="{{event.id}}" id="eventId" name="eventId" readonly>
+                    </div>
+
+                    <h3><label for="comment">Комментарий</label></h3>
+                    <textarea class="comment_textarea" name="comment" id="comment" cols="30" rows="3"
+                              placeholder="Оставьте свой комментарий здесь..."></textarea>
+                    {{if id == -1}}
+                    <div class="div-disabled com_button">
+                        <button class="disabled" disabled>Войдите в систему</button>
+                    </div>
+                    {{else}}
+                    <div class="com_button">
+                        <button>Сохранить</button>
+                    </div>
+
+                    {{end}}
+                </form>
+            </div>
+
+            <div class="comments">
+                {{for comment in comments}}
+                <h3>{{comment.email}}</h3>
+                <div class="comment">
+                    <p>{{comment.text}}</p>
+                    {{if comment.user_id == id}}
+                    <div class="com_tools">
+                        <a href="javascript:void(0)" onclick="showHide('comment-edit-form')"
+                           class="icon regular fa-edit"><span class="label">Изменить</span></a>
+                        <a href="/events/deleteComment/{{event.id}}/{{comment.id}}"
+                           class="icon regular fa-trash-alt"><span class="label">Удалить</span></a>
+                    </div>
+                    {{end}}
+                </div>
+
+                <div class="comment comment-edit-form" id="comment-edit-form">
+                    <form action="/events/saveCommentUpdates" method="post">
+                        <div class="hidden-id">
+                            <input type="text" value="{{id}}" name="userId" readonly>
+                            <input type="text" value="{{event.id}}" name="eventId" readonly>
+                            <input type="text" value="{{comment.id}}" name="eventId" readonly>
+                        </div>
+                        <textarea class="comment" name="comment" id="commentUpd" cols="30"
+                                  rows="3">{{comment.text}}</textarea>
+                        <button>Сохранить</button>
+                    </form>
+                </div>
+                {{end}}
+                
+            </div>
+        </div>
+    </div>
+    
+    <div id="footer">
+        <div class="container">
+            <div class="col-12">
+
+                <!-- Contact -->
+                <section class="footer-contact">
+                    <header>
+                        <h3>Семестровая работа Гафаровой Камиллы, группа 11-106</h3>
+                    </header>
+                    <ul class="icons">
+                        <li><a href="https://vk.com/id120630797" class="icon brands fa-vk"><span class="label">Vk</span></a>
+                        </li>
+                        <li><a href="https://t.me/kama_llama" class="icon brands fa-telegram"><span class="label">Telegram</span></a>
+                        </li>
+                        <li><a href="https://github.com/kamilla11/sem-work-1" class="icon brands fa-github"><span
+                                class="label">GitHub</span></a>
+                        </li>
+                    </ul>
+                </section>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/jquery.dropotron.min.js"></script>
+<script src="/assets/js/jquery.scrolly.min.js"></script>
+<script src="/assets/js/jquery.scrollex.min.js"></script>
+<script src="/assets/js/browser.min.js"></script>
+<script src="/assets/js/breakpoints.min.js"></script>
+<script src="/assets/js/util.js"></script>
+<script src="/assets/js/wow.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="js/global.min.js"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/jquery.dropotron.min.js"></script>
+<script src="/assets/js/jquery.scrolly.min.js"></script>
+<script src="/assets/js/jquery.scrollex.min.js"></script>
+<script src="/assets/js/browser.min.js"></script>
+<script src="/assets/js/breakpoints.min.js"></script>
+<script src="/assets/js/util.js"></script>
+<script src="/assets/js/event.js"></script>
+<script>
+    new WOW().init();
+</script>
 </body>
 </html>

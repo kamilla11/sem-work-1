@@ -5,14 +5,11 @@ namespace HttpServer.MyORM;
 public class AccountDAO: IDAO<Account>
 {
     private static string _connectionStr;
-   // private List<Account> accounts;
-    
     private List<Account> Accounts => GetAll().ToList();
 
     public AccountDAO(string connectionString)
     {
         _connectionStr = connectionString;
-       // accounts = GetAll().ToList();
     }
 
     public Account GetById(int id)
@@ -25,6 +22,7 @@ public class AccountDAO: IDAO<Account>
         var account = Accounts.Find(a => a.Email == login && a.Password == password);
         return account;
     }
+    
     
     public IEnumerable<Account> GetAll()
     {
@@ -49,7 +47,7 @@ public class AccountDAO: IDAO<Account>
 
     public int Update(Account entity)
     {
-        return new Database(_connectionStr).Update<Account>(entity);
+        return new Database(_connectionStr).Update(entity);
     }
 
     public (bool, int?) VerifyLoginAndPassword(string login, string password)
