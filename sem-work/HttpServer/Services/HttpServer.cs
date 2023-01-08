@@ -19,7 +19,7 @@ namespace HttpServer
             _dbSettings = new DBSettings();
             _sessionManager = SessionManager.Instance;
         }
-        
+
 
         public void Start()
         {
@@ -41,9 +41,10 @@ namespace HttpServer
 
                     _httpListener.Prefixes.Clear();
 
-                    _httpListener.Prefixes.Add($"http://localhost:{_serverSettings.Port}/");
+                    var path = $"http://localhost:{_serverSettings.Port}/";
+                    _httpListener.Prefixes.Add(path);
 
-                    Console.WriteLine("Ожидание подключений...");
+                    Console.WriteLine($"Ожидание подключения к {path}");
                     _httpListener.Start();
 
                     Console.WriteLine("Сервер запущен.");
@@ -72,14 +73,14 @@ namespace HttpServer
                 HttpListenerResponse response = _httpContext.Response;
 
                 byte[] buffer;
-                
-                var responseProvider = new ResponseProvider( _serverSettings, _httpContext, _sessionManager);
+
+                var responseProvider = new ResponseProvider(_serverSettings, _httpContext, _sessionManager);
 
                 try
                 {
                     if (!responseProvider.FilesHandler(out buffer) &&
                         !responseProvider.MethodHandler(out buffer))
-                    // if (!responseProvider.MethodHandler(out buffer))
+                        // if (!responseProvider.MethodHandler(out buffer))
                     {
                         buffer = responseProvider.NotFound();
                     }

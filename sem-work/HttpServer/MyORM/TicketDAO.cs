@@ -2,7 +2,7 @@ using HttpServer.Interfaces;
 
 namespace HttpServer.MyORM;
 
-public class TicketDAO:IDAO<Ticket>
+public class TicketDAO : IDAO<Ticket>
 {
     private static string _connectionStr;
     private List<Ticket> tickets;
@@ -22,8 +22,8 @@ public class TicketDAO:IDAO<Ticket>
     {
         return new Database(_connectionStr).Select<Ticket>();
     }
-    
-    
+
+
     public int Insert(Ticket entity)
     {
         return new Database(_connectionStr).Insert(entity);

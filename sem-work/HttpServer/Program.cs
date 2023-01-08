@@ -7,7 +7,6 @@ namespace HttpServer
     {
         static void Main(string[] args)
         {
-            //Console.WriteLine(Hash.ComputePasswordHash("password"));
             var server = new HttpServer();
             Console.WriteLine("Введите start для запуска сервера, stop для остановки и restart для перезапуска.");
             while (true)

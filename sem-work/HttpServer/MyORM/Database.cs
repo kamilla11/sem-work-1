@@ -15,13 +15,13 @@ public class Database
         //new Database(_connectionStr).Delete(new Account { Id = 2, Login = "hihihi", Password = "hahaha" });
 
         //new Database(_connectionStr).Update(new Account {Id = 2, Email = "kamamama", Password = "kama", Name = "kama", Surname = "kama", Gender = "Небинарная личность"});
-        
+
         //new Database(_connectionStr).Delete<Account>(6);
 
         //new Database(_connectionStr).Insert(new Account { Login = "hihihi", Password = "hahaha" });
 
         //var result = new Database(_connectionStr).Select<Account>();
-        
+
         // foreach (var r in result)
         // {
         //     Console.WriteLine(r);
@@ -48,13 +48,13 @@ public class Database
         var tableName = typeof(T).Name.ToLower();
         return ExecuteQuery<T>($"select * from public.\"{tableName}\" where id = {id}").FirstOrDefault();
     }
-    
+
     public T Select<T>(Guid id)
     {
         var tableName = typeof(T).Name.ToLower();
         return ExecuteQuery<T>($"select * from public.\"{tableName}\" where id::text = '{id}'").FirstOrDefault();
     }
-    
+
     public int Insert<T>(T obj)
     {
         var t = typeof(T);
@@ -68,6 +68,7 @@ public class Database
                 nameList.Add(name);
                 AddParameter("@" + name, p.GetValue(obj));
             }
+
             if (name != "id")
             {
                 nameList.Add(name);
@@ -128,7 +129,6 @@ public class Database
                 AddParameter("@" + name, val);
                 return name + "=@" + name;
             }
-           
         }));
         var query = $"delete from public.\"{tableName}\" where {values}";
         return ExecuteNonQuery(query);
@@ -141,7 +141,7 @@ public class Database
         AddParameter("@id", id);
         return ExecuteNonQuery($"delete from public.\"{tableName}\" where id=@id");
     }
-    
+
     public int Delete<T>(Guid id)
     {
         var t = typeof(T);
@@ -155,12 +155,12 @@ public class Database
         var t = typeof(T);
         var tableName = t.Name.ToLower();
         var properties = t.GetProperties();
-        var values = string.Join(", ", properties.Where(p=>p.Name.ToLower()!="id").Select(p =>
+        var values = string.Join(", ", properties.Where(p => p.Name.ToLower() != "id").Select(p =>
         {
             var val = p.GetValue(obj);
             var name = p.Name.ToLower();
             AddParameter("@" + name, val);
-                return name + "=@" + name;
+            return name + "=@" + name;
         }));
         AddParameter("@id", properties.First().GetValue(obj).ToString());
         return ExecuteNonQuery($"update public.\"{tableName}\" set {values} where id::text=@id");

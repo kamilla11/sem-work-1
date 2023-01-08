@@ -10,10 +10,10 @@ namespace HttpServer;
 
 public class ResponseProvider
 {
-    private HttpListenerContext _listenerContext;
-    private static string _connectionStr = GlobalSettings.ConnectionString;
-    private SessionManager _sessionManager;
-    private ServerSettings _serverSettings;
+    private readonly HttpListenerContext _listenerContext;
+    private readonly string _connectionStr = GlobalSettings.ConnectionString;
+    private readonly SessionManager _sessionManager;
+    private readonly ServerSettings _serverSettings;
 
     public ResponseProvider(ServerSettings serverSettings, HttpListenerContext listenerContext,
         SessionManager sessionManager)
@@ -23,7 +23,7 @@ public class ResponseProvider
         _serverSettings = serverSettings;
     }
 
-    public bool FilesHandler(out byte[] buffer)
+    public bool FilesHandler(out byte[]? buffer)
     {
         buffer = null;
         if (Directory.Exists(_serverSettings.Path))
@@ -36,10 +36,10 @@ public class ResponseProvider
     }
 
 
-    private byte[] LoadFile(string path)
+    private byte[]? LoadFile(string path)
     {
         var rawUrl = _listenerContext.Request.RawUrl.Replace("%20", " ");
-        byte[] localBuffer = null;
+        byte[]? localBuffer = null;
         var filePath = path + rawUrl;
 
         if (Directory.Exists(filePath))
@@ -70,18 +70,13 @@ public class ResponseProvider
     }
 
 
-    public bool MethodHandler(out byte[] buffer)
+    public bool MethodHandler(out byte[]? buffer)
     {
-        bool isSaveAccountMethod = false;
         buffer = null;
-        // объект запроса
         HttpListenerRequest request = _listenerContext.Request;
-
-        // объект ответа
         HttpListenerResponse response = _listenerContext.Response;
 
-
-        if (request.Url.Segments.Length < 2)
+        if (request.Url!.Segments.Length < 2)
         {
             FilesHandler(out buffer);
             return true;
@@ -89,88 +84,43 @@ public class ResponseProvider
 
         string controllerName = request.Url.Segments[1].Replace("/", "");
 
+        if (!TryGetController(out var controller, controllerName)) return false;
 
-        string[] strParams = { };
-        object[] queryParams = { };
-
-        Type controller;
-        if (!TryGetController(out controller, controllerName)) return false;
-
-        string methodName = "";
-        MethodInfo method = null;
-
-        if (request.Url.Segments.Length < 3)
-        {
-            methodName = controllerName;
-            if (!TryGetMethod(out method, controller, methodName, out queryParams, controllerName)) return false;
-        }
-        else
-        {
-            var index = request.Url.Segments.Length - 1;
-            var isSuccess = false;
-            while (index != 1 && !isSuccess)
-            {
-                var currentName = request.Url.Segments[index].Replace("/", "");
-                index--;
-                if (!TryGetMethod(out method, controller, currentName, out queryParams, controllerName)) continue;
-                isSuccess = true;
-                methodName = currentName;
-            }
-
-            if (!isSuccess) return false;
-        }
-
+        var isMethodController = request.Url.Segments.Length < 3;
+        var method = TryGetLastMethodInController(isMethodController, controller, out var methodName,
+            out var queryParams, controllerName, request);
+        if (method is null) return false;
 
         var cookie = request.Cookies["SessionId"];
-        var isCookieAndSessionExist =
-            cookie is not null && _sessionManager.IsSessionExist(Guid.Parse(cookie.Value));
-        if (isCookieAndSessionExist)
-        {
-            var session = _sessionManager.GetSessionInfo(Guid.Parse(cookie!.Value));
-            queryParams = queryParams.Concat(new string[] { session!.AccountId.ToString() }).ToArray();
-        }
-        else
-        {
-            queryParams = queryParams.Concat(new string[] { "-1" }).ToArray();
-        }
+        var convertedParams = GenerateQueryParams(cookie, queryParams, request, method);
 
-        if (request.Url.Segments.Length > 3 && _listenerContext.Request.HttpMethod == HttpMethod.Get.ToString() &&
-            queryParams.Length == 2)
-        {
-            strParams = request.Url
-                .Segments
-                .Skip(3)
-                .Select(s => s.Replace("/", ""))
-                .ToArray();
-
-
-            queryParams = queryParams.Concat(strParams).Select(x => x.ToString()).ToArray();
-        }
-
-        queryParams = method.GetParameters()
-            .Select((p, i) => Convert.ChangeType(queryParams[i], p.ParameterType))
-            .ToArray();
-
-        if (methodName == "quite")
-        {
-            var cook = new Cookie("SessionId", Guid.Parse(cookie!.Value).ToString());
-            cook.Expires = DateTime.Now.AddDays(-1d);
-            cook.Path = "/";
-            response.Cookies.Add(cook);
-            _sessionManager.DeleteSession(Guid.Parse(cookie!.Value));
-            response.Redirect("/main");
-        }
-
-        var ret = method.Invoke(Activator.CreateInstance(controller), queryParams);
+        var ret = method.Invoke(Activator.CreateInstance(controller), convertedParams);
 
         response.ContentType = "text/html";
         if (ret is not null) buffer = Encoding.UTF8.GetBytes(ret.ToString()!);
 
-        switch (method.Name)
+        ProcessMethodsAfter(ref buffer, methodName, ret, response, cookie);
+
+        return true;
+    }
+
+    private void ProcessMethodsAfter(ref byte[] buffer, string methodName, object? ret, HttpListenerResponse response,
+        Cookie cookie)
+    {
+        switch (methodName)
         {
+            case "quite":
+            {
+                var cook = new Cookie("SessionId", Guid.Parse(cookie!.Value).ToString());
+                cook.Expires = DateTime.Now.AddDays(-1d);
+                cook.Path = "/";
+                response.Cookies.Add(cook);
+                _sessionManager.DeleteSession(Guid.Parse(cookie.Value));
+                break;
+            }
             case "saveAccount":
             {
-                var res = ((bool, Account, string))ret;
+                var res = ((bool, Account, string))ret!;
                 var acc = res.Item2;
                 if (res.Item1)
                 {
@@ -191,7 +141,7 @@ public class ResponseProvider
 
             case "login":
             {
-                var res = ((bool, int?, bool))ret;
+                var res = ((bool, int?, bool))ret!;
                 if (res.Item1)
                 {
                     AccountDAO accountDao = new(_connectionStr);
@@ -224,12 +174,70 @@ public class ResponseProvider
                 break;
             }
         }
-
-        response.ContentLength64 = buffer.Length;
-        return true;
     }
 
-    public bool TryGetController(out Type controller, string controllerName)
+    private object[] GenerateQueryParams(Cookie? cookie, object[] queryParams, HttpListenerRequest request,
+        MethodInfo method)
+    {
+        if (cookie is not null && _sessionManager.IsSessionExist(Guid.Parse(cookie.Value)))
+        {
+            var session = _sessionManager.GetSessionInfo(Guid.Parse(cookie.Value));
+            queryParams = queryParams.Concat(new[] { session!.AccountId.ToString() }).ToArray();
+        }
+        else
+        {
+            queryParams = queryParams.Concat(new[] { "-1" }).ToArray();
+        }
+
+        if (request.Url.Segments.Length > 3 && _listenerContext.Request.HttpMethod == HttpMethod.Get.ToString() &&
+            queryParams.Length == 2)
+        {
+            var strParams = request.Url
+                .Segments
+                .Skip(3)
+                .Select(s => s.Replace("/", ""))
+                .ToArray();
+
+            queryParams = queryParams.Concat(strParams).Select(x => x.ToString()).ToArray();
+        }
+
+        queryParams = method.GetParameters()
+            .Select((p, i) => Convert.ChangeType(queryParams[i], p.ParameterType))
+            .ToArray();
+        return queryParams;
+    }
+
+    private MethodInfo? TryGetLastMethodInController(bool isMethodController, Type controller, out string methodName,
+        out object[]? queryParams,
+        string controllerName, HttpListenerRequest request)
+    {
+        methodName = "";
+        queryParams = Array.Empty<Object>();
+        MethodInfo? method = null;
+        if (isMethodController)
+        {
+            methodName = controllerName;
+            method = TryGetMethod(controller, methodName, out queryParams, controllerName);
+        }
+        else
+        {
+            var index = request.Url.Segments.Length - 1;
+            var isSuccess = false;
+            while (index != 1 && !isSuccess)
+            {
+                var currentName = request.Url.Segments[index].Replace("/", "");
+                index--;
+                method = TryGetMethod(controller, currentName, out queryParams, controllerName);
+                if (method is null) continue;
+                isSuccess = true;
+                methodName = currentName;
+            }
+        }
+
+        return method;
+    }
+
+    private bool TryGetController(out Type controller, string controllerName)
     {
         var assembly = Assembly.GetExecutingAssembly();
         controller = assembly.GetTypes()
@@ -242,9 +250,10 @@ public class ResponseProvider
         return true;
     }
 
-    public bool TryGetMethod(out MethodInfo method, Type controller, string methodName, out object[] queryParams,
+    private MethodInfo? TryGetMethod(Type controller, string methodName, out object[]? queryParams,
         string controllerName)
     {
+        MethodInfo? method;
         var methodType = $"Http{_listenerContext.Request.HttpMethod}";
         queryParams = new object[] { };
         switch (methodType)
@@ -255,7 +264,7 @@ public class ResponseProvider
                                          (((HttpGET)c.GetCustomAttribute(typeof(HttpGET))).MethodURI ==
                                           methodName.ToLower() ||
                                           c.Name.ToLower() == methodName.ToLower()));
-                string path = "";
+                string path;
                 if (methodName == "main") path = _serverSettings.Path + "/index.html";
                 else path = _serverSettings.Path + "/" + controllerName.ToLower() + ".html";
                 queryParams = new[] { path };
@@ -273,29 +282,23 @@ public class ResponseProvider
                 break;
         }
 
-        if (method is null)
-            return false;
-        return true;
+        return method;
     }
 
-    private static string[] GetParamsPostData(HttpListenerRequest request)
+    private static string[]? GetParamsPostData(HttpListenerRequest request)
     {
         if (!request.HasEntityBody)
         {
             return null;
         }
 
-        using (Stream body = request.InputStream)
-        {
-            using (var reader = new StreamReader(body, Encoding.UTF8))
-            {
-                var query = reader.ReadToEnd();
-                var queryParams = query.Split('&')
-                    .Select(pair => pair.Split('='))
-                    .Select(pair => HttpUtility.UrlDecode(pair[1]))
-                    .ToArray();
-                return queryParams;
-            }
-        }
+        using Stream body = request.InputStream;
+        using var reader = new StreamReader(body, Encoding.UTF8);
+        var query = reader.ReadToEnd();
+        var queryParams = query.Split('&')
+            .Select(pair => pair.Split('='))
+            .Select(pair => HttpUtility.UrlDecode(pair[1]))
+            .ToArray();
+        return queryParams;
     }
 }

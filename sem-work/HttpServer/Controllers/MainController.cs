@@ -14,7 +14,7 @@ public class MainController: Controller
     public string main(string path, int userId)
     {
         var tickets = _ticketDao.GetAll();
-        if (tickets is null) return "Events not found";
+        if (tickets is null) return "Tickets not found";
         return CreateHtmlCode(path,
             new { Tickets = tickets });
     }

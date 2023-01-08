@@ -33,45 +33,6 @@ public class EventController : Controller
         return CreateHtmlCode(path, new { Event = singleEvent, Comments = comments, Id = userId });
     }
 
-    // [HttpGET("events/deleteComment")]
-    // public string deleteComment(string path, int userId, int eventId, int commentId)
-    // {
-    //     _commentDao.Delete(commentId);
-    //     return openEvent("./site/single-event.html", userId, eventId);
-    // }
-
-    
-
-    // [HttpPOST("events/saveComment")]
-    // public string saveComment(int userId, int eventId, string text)
-    // {
-    //     var account = _accountDao.GetById(userId);
-    //
-    //     var res = _commentDao.Insert(new() { UserId = userId, Email = account.Email, EventId = eventId, Text = text });
-    //     if (res == 0)
-    //     {
-    //         return "Error while saving data";
-    //     }
-    //
-    //     return null;
-    //     // return openEvent("./site/single-event.html", userId, eventId);
-    // }
-    //
-    // [HttpPOST("events/saveCommentUpdates")]
-    // public string saveCommentUpdates(int userId, int eventId, int commentId, string text)
-    // {
-    //     var comment = _commentDao.GetById(commentId);
-    //     comment.Text = text;
-    //     var res = _commentDao.Update(comment);
-    //     if (res == 0)
-    //     {
-    //         return "Error while saving data";
-    //     }
-    //
-    //     return null;
-    //     //  return openEvent("./site/single-event.html", userId, eventId);
-    // }
-
     [HttpPOST("events/deleteComment")]
     public string deleteComment(int userId, int eventId, int commentId)
     {
@@ -93,6 +54,7 @@ public class EventController : Controller
         {
             return "Error while saving data";
         }
+
         var singleEvent = _eventDao.GetById(eventId);
         var comments = _commentDao.GetAllByEventId(eventId);
 
@@ -110,6 +72,7 @@ public class EventController : Controller
         {
             return "Error while saving data";
         }
+
         var singleEvent = _eventDao.GetById(eventId);
         var comments = _commentDao.GetAllByEventId(eventId);
 

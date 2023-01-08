@@ -53,8 +53,13 @@ internal class AccountsController : Controller
     }
 
     [HttpGET("accounts/quite")]
-    public void quite(string path, int userId)
+    public string quite(string path, int userId)
     {
+        TicketDAO ticketDao = new(_connectionStr);
+        var tickets = ticketDao.GetAll();
+        if (tickets is null) return "Tickets not found";
+        return CreateHtmlCode("./site/index.html",
+            new { Tickets = tickets });
     }
 
     [HttpPOST("accounts/saveAccount")]
